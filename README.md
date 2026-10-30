@@ -36,7 +36,7 @@ Windows 10/11 x64 上打包（需要 Python 3.11 x64 和 Inno Setup 6）：
 powershell -File .\scripts\build_windows.ps1
 ```
 
-脚本会核对前端产物、跑测试、用 PyInstaller 打包，再用 Inno Setup 生成 `JianSubtitle-<版本>-win-x64-setup.exe`。`-Mode OneFile` 生成单个 EXE；`-WebView2Installer <微软官方离线安装程序>` 把 WebView2 打进安装包（会检查微软签名）；`-InstallTest` 在本机做一次静默安装、启动检查和卸载。
+脚本会核对前端产物、跑测试、用 PyInstaller 打包，再用 Inno Setup 生成 `JianSubtitle-<版本>-win-x64-setup.exe`。`-Mode OneFile` 生成单个 EXE；`-WebView2Installer <微软官方离线安装程序>` 把 WebView2 打进安装包（会检查微软签名）；`-InstallTest` 依次做静默安装、启动检查、按自动更新的方式覆盖安装并确认简幕重新打开，最后卸载；CI 每次构建都会跑。
 
 ## 发布
 
