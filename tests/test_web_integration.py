@@ -75,7 +75,14 @@ class BoundaryIntegrationTests(unittest.TestCase):
         deadline = time.monotonic() + 10
         while self.c.running and time.monotonic() < deadline:
             time.sleep(.01)
+        self.settle()
         self.temp.cleanup()
+
+    def settle(self):
+        # The export thread marks the job finished and then writes its manifest while holding the lock;
+        # taking the lock waits for that write (Windows cannot delete a file that is still open).
+        with self.c.lock:
+            pass
 
     def call(self, action, payload=None):
         p = self.c.project
@@ -93,6 +100,7 @@ class BoundaryIntegrationTests(unittest.TestCase):
         while self.c.running and time.monotonic() < deadline:
             time.sleep(.01)
         self.assertFalse(self.c.running)
+        self.settle()
 
     def test_selected_export_does_not_include_others(self):
         self.start(assetIds=[self.c.project.assets[1].id], format='png')
