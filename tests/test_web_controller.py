@@ -1,5 +1,6 @@
 import copy
 import math
+import os
 import tempfile
 import threading
 import time
@@ -112,8 +113,12 @@ class WebControllerTests(unittest.TestCase):
         self.source = self.root / "source"
         self.source.mkdir()
         self.paths = [self.source / "第一条字幕.png", self.source / "20260912_123000.png", self.source / "第三条字幕.png"]
-        for path in self.paths:
+        # Distinct times keep this order by capture time; Windows' ~16 ms clock can give all three the same one,
+        # and the caption-less timestamp file would then sort first by name.
+        base = time.time() - 3600
+        for index, path in enumerate(self.paths):
             Image.new("RGB", (640, 360), "white").save(path)
+            os.utime(path, (base + index, base + index))
         self.controller = WebController(self.root / "data")
         self.controller.import_paths(self.paths)
 
