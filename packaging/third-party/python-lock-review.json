@@ -1,0 +1,576 @@
+{
+  "checkedAt": "2026-09-12T08:20:28.464Z",
+  "report": [
+    {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "requires": [
+        "furo; extra == \"docs\"",
+        "olefile; extra == \"docs\"",
+        "sphinx>=8.2; extra == \"docs\"",
+        "sphinx-autobuild; extra == \"docs\"",
+        "sphinx-copybutton; extra == \"docs\"",
+        "sphinx-inline-tabs; extra == \"docs\"",
+        "sphinxext-opengraph; extra == \"docs\"",
+        "olefile; extra == \"fpx\"",
+        "olefile; extra == \"mic\"",
+        "arro3-compute; extra == \"test-arrow\"",
+        "arro3-core; extra == \"test-arrow\"",
+        "nanoarrow; extra == \"test-arrow\"",
+        "pyarrow; extra == \"test-arrow\"",
+        "coverage>=7.4.2; extra == \"tests\"",
+        "defusedxml; extra == \"tests\"",
+        "markdown2; extra == \"tests\"",
+        "olefile; extra == \"tests\"",
+        "packaging; extra == \"tests\"",
+        "pytest; extra == \"tests\"",
+        "pytest-cov; extra == \"tests\"",
+        "pytest-timeout; extra == \"tests\"",
+        "pytest-xdist; extra == \"tests\"",
+        "setuptools; extra == \"tests\"",
+        "trove-classifiers>=2024.10.12; extra == \"tests\"",
+        "defusedxml; extra == \"xmp\""
+      ],
+      "license": "MIT-CMU",
+      "wheels": [
+        {
+          "file": "pillow-12.3.0-cp310-cp310-win_amd64.whl",
+          "sha256": "300557495eb45ebb8aec96c2da9c4be642fbf7cd937278b4013ba894ea8eb0eb",
+          "url": "https://files.pythonhosted.org/packages/48/7c/8fa0039574c476d7c6fa57dd7c32a130436877c6ec1e5ce1cc8ec44878c1/pillow-12.3.0-cp310-cp310-win_amd64.whl",
+          "published": "2026-07-01T11:53:42.764209Z"
+        },
+        {
+          "file": "pillow-12.3.0-cp311-cp311-win_amd64.whl",
+          "sha256": "8e95e1385e4998ae9694eeaa4730ba5457ff61185b3a55e2e7bea0880aef452a",
+          "url": "https://files.pythonhosted.org/packages/63/c6/4bad1b18d132a50b27e1365e1ab163616f7a5bb56d330f66f9d1d9d4f9d4/pillow-12.3.0-cp311-cp311-win_amd64.whl",
+          "published": "2026-07-01T11:54:02.066017Z"
+        },
+        {
+          "file": "pillow-12.3.0-cp312-cp312-win_amd64.whl",
+          "sha256": "a2b55dd6b2a4c4b7d87ffa56bdb33fdc5fdb9a462173861a7bc097f17d91cb09",
+          "url": "https://files.pythonhosted.org/packages/45/89/da2f7971a317f83d807fdd4065c0af40208e59e692cc43d315a71a0e96d1/pillow-12.3.0-cp312-cp312-win_amd64.whl",
+          "published": "2026-07-01T11:54:22.025716Z"
+        },
+        {
+          "file": "pillow-12.3.0-cp313-cp313-win_amd64.whl",
+          "sha256": "1cca606cd25738df4ed873d5ad46bbdb3d83b5cbca291f6b4ff13a4df6b0bbe8",
+          "url": "https://files.pythonhosted.org/packages/a6/9b/7a58e61d62be561da3a356fe2384d4059a6345fc130e23ef1c36a5b81d24/pillow-12.3.0-cp313-cp313-win_amd64.whl",
+          "published": "2026-07-01T11:54:47.141516Z"
+        },
+        {
+          "file": "pillow-12.3.0-cp314-cp314t-win_amd64.whl",
+          "sha256": "962864dc93511324d51ddbb5b9f8731bf71675b93ca612a07441896f4688fb8c",
+          "url": "https://files.pythonhosted.org/packages/90/de/3634abee5f1c9e13c56787b7d5517b0ba8d6de51700b95578cf338349c9f/pillow-12.3.0-cp314-cp314t-win_amd64.whl",
+          "published": "2026-07-01T11:55:34.044141Z"
+        },
+        {
+          "file": "pillow-12.3.0-cp314-cp314-win_amd64.whl",
+          "sha256": "fdafc9cce40277e0f7a0feabce0ee50dd2fa1800f3b38015e51296b5e814048d",
+          "url": "https://files.pythonhosted.org/packages/f1/e0/492879f69d94f91f60fc8cd05ba03650e9520afebb2fb7aa12777d7c7f38/pillow-12.3.0-cp314-cp314-win_amd64.whl",
+          "published": "2026-07-01T11:55:12.745192Z"
+        },
+        {
+          "file": "pillow-12.3.0-cp315-cp315t-win_amd64.whl",
+          "sha256": "8cd2f7bdda092d99c9fc2fb7391354f306d01443d22785d0cbfafa2e2c8bb418",
+          "url": "https://files.pythonhosted.org/packages/e4/04/62bcd9f844984c5938d3b05264a61d797a29d3e0812341a8204af70bbdee/pillow-12.3.0-cp315-cp315t-win_amd64.whl",
+          "published": "2026-07-01T11:56:21.214977Z"
+        },
+        {
+          "file": "pillow-12.3.0-cp315-cp315-win_amd64.whl",
+          "sha256": "fa4ecea169a355be7a3ade2c783e2ed12f0e40d2c5621cda8b3297faf7fbb9f5",
+          "url": "https://files.pythonhosted.org/packages/3e/03/1846c49ba3b1d5550392a4bbd06d6fb4578e1cd91a803198b5c90f5f7d53/pillow-12.3.0-cp315-cp315-win_amd64.whl",
+          "published": "2026-07-01T11:55:59.975445Z"
+        },
+        {
+          "file": "pillow-12.3.0-pp311-pypy311_pp73-win_amd64.whl",
+          "sha256": "04f01d28a6aaff387bf842a13be313df23ba0597a44f1a976c9feb3c6ff4711a",
+          "url": "https://files.pythonhosted.org/packages/36/54/0169bc772ec491108b62f644f8ecf1fe5d8ae5ebafde2ee2142210166903/pillow-12.3.0-pp311-pypy311_pp73-win_amd64.whl",
+          "published": "2026-07-01T11:56:35.046439Z"
+        }
+      ]
+    },
+    {
+      "name": "numpy",
+      "version": "2.4.6",
+      "requires": null,
+      "license": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "wheels": [
+        {
+          "file": "numpy-2.4.6-cp311-cp311-win_amd64.whl",
+          "sha256": "1e254a00cdf42b1e4d5b3d68d33af63268d41340d8885df2ab6470f2e1500147",
+          "url": "https://files.pythonhosted.org/packages/c5/31/7fc6239c12bce7e931463251cca4426c465e1876ba3cc785402ef4dd8f4e/numpy-2.4.6-cp311-cp311-win_amd64.whl",
+          "published": "2026-05-18T23:33:44.131802Z"
+        },
+        {
+          "file": "numpy-2.4.6-cp312-cp312-win_amd64.whl",
+          "sha256": "d8e8286dd7cea7895157318d1b91cdacac64c479f3cbc8dce548331728484751",
+          "url": "https://files.pythonhosted.org/packages/ab/ca/feab00bd44aa5fe1ad2c18f08b4d3bb92e26484b0b1d1443897809ed528c/numpy-2.4.6-cp312-cp312-win_amd64.whl",
+          "published": "2026-05-18T23:34:23.095920Z"
+        },
+        {
+          "file": "numpy-2.4.6-cp313-cp313t-win_amd64.whl",
+          "sha256": "25c692919ac5a01f170a3bfcd62d745b24fd095c353d50812637d6fcab442e75",
+          "url": "https://files.pythonhosted.org/packages/77/71/5673e351671a1d2bd6063b91b44f70c0affea7d1516fa7a6572941ba4aa1/numpy-2.4.6-cp313-cp313t-win_amd64.whl",
+          "published": "2026-05-18T23:35:32.175108Z"
+        },
+        {
+          "file": "numpy-2.4.6-cp313-cp313-win_amd64.whl",
+          "sha256": "c4fc99836233ea196540b17ab0983aff60ed07941751930f5f4d05bc3b3b7359",
+          "url": "https://files.pythonhosted.org/packages/b5/cd/9cc4dc876fb065d5c220aae4d5e14826b2715331bb7618ce1fb07a679d99/numpy-2.4.6-cp313-cp313-win_amd64.whl",
+          "published": "2026-05-18T23:34:58.928358Z"
+        },
+        {
+          "file": "numpy-2.4.6-cp314-cp314t-win_amd64.whl",
+          "sha256": "81a1cca95ed5bb92aa8b10dd2cdc9a0d3853a50fad926c28b5d7e8ea54389627",
+          "url": "https://files.pythonhosted.org/packages/b2/d4/7c67becf668f973cb490cec3e98dfd799d866f9c989a54d355672cfa0db6/numpy-2.4.6-cp314-cp314t-win_amd64.whl",
+          "published": "2026-05-18T23:36:43.996246Z"
+        },
+        {
+          "file": "numpy-2.4.6-cp314-cp314-win_amd64.whl",
+          "sha256": "b507f5c4c1d508876d1819b6bf9a49d365b96320b5d4993426b33a23ca4b8261",
+          "url": "https://files.pythonhosted.org/packages/df/ac/46de6dda46478f7942f839e094970be2d4a861e005c4b3bf07c92e291a09/numpy-2.4.6-cp314-cp314-win_amd64.whl",
+          "published": "2026-05-18T23:36:09.107376Z"
+        },
+        {
+          "file": "numpy-2.4.6-pp311-pypy311_pp73-win_amd64.whl",
+          "sha256": "2803abfebfc990042cd494d8ce2d5f82e9d847af6d35ec486923aa19dbad5e73",
+          "url": "https://files.pythonhosted.org/packages/15/ce/e5ec180bc41812edcd8daeb8639d205622c0e8c02259d8ab25a0201b3c2a/numpy-2.4.6-pp311-pypy311_pp73-win_amd64.whl",
+          "published": "2026-05-18T23:37:09.715812Z"
+        }
+      ]
+    },
+    {
+      "name": "opencv-python",
+      "version": "4.14.0.94",
+      "requires": [
+        "numpy<2.0; python_version < \"3.9\"",
+        "numpy>=2; python_version >= \"3.9\""
+      ],
+      "license": "Apache 2.0",
+      "wheels": [
+        {
+          "file": "opencv_python-4.14.0.94-cp37-abi3-win_amd64.whl",
+          "sha256": "ace53616cdffc9643e17e075397b493e607c427d388c7508798ef7ad2ed577cc",
+          "url": "https://files.pythonhosted.org/packages/08/f0/ebf59732b54b4dd8a9e23f3b453ad73e11ec2230faf25ff4b1befa191ce0/opencv_python-4.14.0.94-cp37-abi3-win_amd64.whl",
+          "published": "2026-07-28T18:32:19.031818Z"
+        }
+      ]
+    },
+    {
+      "name": "fonttools",
+      "version": "4.63.0",
+      "requires": [
+        "lxml>=4.0; extra == \"lxml\"",
+        "brotli>=1.0.1; platform_python_implementation == \"CPython\" and extra == \"woff\"",
+        "brotlicffi>=0.8.0; platform_python_implementation != \"CPython\" and extra == \"woff\"",
+        "zopfli>=0.1.4; extra == \"woff\"",
+        "unicodedata2>=17.0.0; python_version <= \"3.14\" and extra == \"unicode\"",
+        "lz4>=1.7.4.2; extra == \"graphite\"",
+        "scipy; platform_python_implementation != \"PyPy\" and extra == \"interpolatable\"",
+        "munkres; platform_python_implementation == \"PyPy\" and extra == \"interpolatable\"",
+        "pycairo; extra == \"interpolatable\"",
+        "matplotlib; extra == \"plot\"",
+        "sympy; extra == \"symfont\"",
+        "xattr; sys_platform == \"darwin\" and extra == \"type1\"",
+        "skia-pathops>=0.5.0; extra == \"pathops\"",
+        "uharfbuzz>=0.45.0; extra == \"repacker\"",
+        "lxml>=4.0; extra == \"all\"",
+        "brotli>=1.0.1; platform_python_implementation == \"CPython\" and extra == \"all\"",
+        "brotlicffi>=0.8.0; platform_python_implementation != \"CPython\" and extra == \"all\"",
+        "zopfli>=0.1.4; extra == \"all\"",
+        "unicodedata2>=17.0.0; python_version <= \"3.14\" and extra == \"all\"",
+        "lz4>=1.7.4.2; extra == \"all\"",
+        "scipy; platform_python_implementation != \"PyPy\" and extra == \"all\"",
+        "munkres; platform_python_implementation == \"PyPy\" and extra == \"all\"",
+        "pycairo; extra == \"all\"",
+        "matplotlib; extra == \"all\"",
+        "sympy; extra == \"all\"",
+        "xattr; sys_platform == \"darwin\" and extra == \"all\"",
+        "skia-pathops>=0.5.0; extra == \"all\"",
+        "uharfbuzz>=0.45.0; extra == \"all\""
+      ],
+      "license": "MIT",
+      "wheels": [
+        {
+          "file": "fonttools-4.63.0-cp310-cp310-win_amd64.whl",
+          "sha256": "0c18358a155d75034911c5ee397a5b44cd19dd325dbb8b35fb60bf421d6a72ac",
+          "url": "https://files.pythonhosted.org/packages/e5/4d/2c2f0069970b6907de8fb5b05c5c0193cc22f717df151d1c7aef1c738f58/fonttools-4.63.0-cp310-cp310-win_amd64.whl",
+          "published": "2026-05-14T12:02:54.917380Z"
+        },
+        {
+          "file": "fonttools-4.63.0-cp311-cp311-win_amd64.whl",
+          "sha256": "063e08bd17bd5a90127a14123de0d6a952dbc847695fd98b63c043d58057f90c",
+          "url": "https://files.pythonhosted.org/packages/08/60/defa5e69641db890a63be281f41345f4c33b157824eaf0b9fad3e08b0dcb/fonttools-4.63.0-cp311-cp311-win_amd64.whl",
+          "published": "2026-05-14T12:03:11.530951Z"
+        },
+        {
+          "file": "fonttools-4.63.0-cp312-cp312-win_amd64.whl",
+          "sha256": "59ac449f8cca9b4ffa08d2e7bbadad87ce710d69d1eda5c3c1ce579baa987272",
+          "url": "https://files.pythonhosted.org/packages/87/36/cccb9bc2a6ab63d1b2980374f0dca72ce95ae267c9b4cfe77455bb70d0d4/fonttools-4.63.0-cp312-cp312-win_amd64.whl",
+          "published": "2026-05-14T12:03:30.057700Z"
+        },
+        {
+          "file": "fonttools-4.63.0-cp313-cp313-win_amd64.whl",
+          "sha256": "ba04cb5891d4c0c21b6da95eda8d7b090021508a294fff33464fc7d241e0856b",
+          "url": "https://files.pythonhosted.org/packages/92/46/5177b01f3b4abfdd4409f31cca4ab279c9343a26efbe9ec78c97fc612e02/fonttools-4.63.0-cp313-cp313-win_amd64.whl",
+          "published": "2026-05-14T12:03:47.414633Z"
+        },
+        {
+          "file": "fonttools-4.63.0-cp314-cp314t-win_amd64.whl",
+          "sha256": "6d4741eb179121cab9eea4cb2393d24492373a260d7945006358c08cfbf45419",
+          "url": "https://files.pythonhosted.org/packages/dd/1e/3ff1a9b523058c2eeb6a9d50f5574e2a738200d0d94107d5bc4105e8da3f/fonttools-4.63.0-cp314-cp314t-win_amd64.whl",
+          "published": "2026-05-14T12:04:26.829722Z"
+        },
+        {
+          "file": "fonttools-4.63.0-cp314-cp314-win_amd64.whl",
+          "sha256": "7d782fac32985914c351556f68ac0855391572bcd87de50e05970d3cd4c96fc5",
+          "url": "https://files.pythonhosted.org/packages/c3/d4/98078064ccc76b45cb0f6c002452011e93c4bd26f6850344f0951cc1fe89/fonttools-4.63.0-cp314-cp314-win_amd64.whl",
+          "published": "2026-05-14T12:04:06.752017Z"
+        },
+        {
+          "file": "fonttools-4.63.0-py3-none-any.whl",
+          "sha256": "445af2eab030a16b9171ea8bdda7ebf7d96bda2df88ee182a464252f6e05e20d",
+          "url": "https://files.pythonhosted.org/packages/2c/47/c99d5268f354002ce80f8d029cd9d7d872969da1de8b93d32de4dc56d6f4/fonttools-4.63.0-py3-none-any.whl",
+          "published": "2026-05-14T12:04:29.092469Z"
+        }
+      ]
+    },
+    {
+      "name": "pywebview",
+      "version": "6.2.1",
+      "requires": [
+        "pythonnet; sys_platform == \"win32\"",
+        "pyobjc-core>=9.0; sys_platform == \"darwin\"",
+        "pyobjc-framework-Cocoa>=9.0; sys_platform == \"darwin\"",
+        "pyobjc-framework-Quartz>=9.0; sys_platform == \"darwin\"",
+        "pyobjc-framework-WebKit>=9.0; sys_platform == \"darwin\"",
+        "pyobjc-framework-security>=9.0; sys_platform == \"darwin\"",
+        "pyobjc-framework-UniformTypeIdentifiers>=9.0; sys_platform == \"darwin\"",
+        "QtPy; sys_platform == \"openbsd6\"",
+        "importlib_resources; python_version < \"3.9\"",
+        "proxy_tools",
+        "bottle",
+        "typing_extensions",
+        "cefpython3; extra == \"cef\"",
+        "PyGObject==3.50.0; extra == \"gtk\"",
+        "PyGObject-stubs; extra == \"gtk\"",
+        "QtPy; extra == \"pyside2\"",
+        "PySide2; extra == \"pyside2\"",
+        "QtPy; extra == \"pyside6\"",
+        "PySide6; extra == \"pyside6\"",
+        "QtPy; extra == \"qt\"",
+        "PyQt6; extra == \"qt\"",
+        "PyQt6-WebEngine; extra == \"qt\"",
+        "QtPy; extra == \"qt5\"",
+        "PyQt5; extra == \"qt5\"",
+        "pyqtwebengine; extra == \"qt5\"",
+        "QtPy; extra == \"qt6\"",
+        "PyQt6; extra == \"qt6\"",
+        "PyQt6-WebEngine; extra == \"qt6\"",
+        "jnius; extra == \"android\"",
+        "cryptography; extra == \"ssl\"",
+        "ruff; extra == \"dev\"",
+        "pre-commit; extra == \"dev\"",
+        "pytest; extra == \"dev\"",
+        "build; extra == \"dev\"",
+        "twine; extra == \"dev\""
+      ],
+      "license": "BSD 3-Clause License\n        \n        Copyright (c) 2014-2017, Roman Sirokov\n        All rights reserved.\n        \n        Redistribution and use in source and binary forms, with or without\n        modification, are permitted provided that the following conditions are met:\n        \n        * Redistributions of source code must retain the above copyright notice, this\n          list of conditions and the following disclaimer.\n        \n        * Redistributions in binary form must reproduce the above copyright notice,\n          this list of conditions and the following disclaimer in the documentation\n          and/or other materials provided with the distribution.\n        \n        * Neither the name of the copyright holder nor the names of its\n          contributors may be used to endorse or promote products derived from\n          this software without specific prior written permission.\n        \n        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\n        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\n        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\n        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\n        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n        ",
+      "wheels": [
+        {
+          "file": "pywebview-6.2.1-py3-none-any.whl",
+          "sha256": "9d07275f53894ab4d5e2e0e996227193e7187dec276d9b624dccbce029216b46",
+          "url": "https://files.pythonhosted.org/packages/3d/25/9491695c22c4842c5b3903b4dc172e0eecf67a27c0af34a71512c9b76a0a/pywebview-6.2.1-py3-none-any.whl",
+          "published": "2026-04-15T09:02:10.186272Z"
+        }
+      ]
+    },
+    {
+      "name": "bottle",
+      "version": "0.13.4",
+      "requires": null,
+      "license": "MIT",
+      "wheels": [
+        {
+          "file": "bottle-0.13.4-py2.py3-none-any.whl",
+          "sha256": "045684fbd2764eac9cdeb824861d1551d113e8b683d8d26e296898d3dd99a12e",
+          "url": "https://files.pythonhosted.org/packages/83/f6/b55ec74cfe68c6584163faa311503c20b0da4c09883a41e8e00d6726c954/bottle-0.13.4-py2.py3-none-any.whl",
+          "published": "2025-06-15T10:08:57.691845Z"
+        }
+      ]
+    },
+    {
+      "name": "typing_extensions",
+      "version": "4.15.0",
+      "requires": null,
+      "license": "PSF-2.0",
+      "wheels": [
+        {
+          "file": "typing_extensions-4.15.0-py3-none-any.whl",
+          "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+          "url": "https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl",
+          "published": "2025-08-25T13:49:24.860024Z"
+        }
+      ]
+    },
+    {
+      "name": "pythonnet",
+      "version": "3.0.5",
+      "requires": [
+        "clr_loader<0.3.0,>=0.2.7"
+      ],
+      "license": "MIT",
+      "wheels": [
+        {
+          "file": "pythonnet-3.0.5-py3-none-any.whl",
+          "sha256": "f6702d694d5d5b163c9f3f5cc34e0bed8d6857150237fae411fefb883a656d20",
+          "url": "https://files.pythonhosted.org/packages/cd/f1/bfb6811df4745f92f14c47a29e50e89a36b1533130fcc56452d4660bd2d6/pythonnet-3.0.5-py3-none-any.whl",
+          "published": "2024-12-13T08:30:40.661789Z"
+        }
+      ]
+    },
+    {
+      "name": "clr_loader",
+      "version": "0.2.8",
+      "requires": [
+        "cffi>=1.13; python_version <= \"3.8\"",
+        "cffi>=1.17; python_version >= \"3.8\""
+      ],
+      "license": "MIT",
+      "wheels": [
+        {
+          "file": "clr_loader-0.2.8-py3-none-any.whl",
+          "sha256": "2cd76904e2f68fecab1ad1d158fb2905b5173a2b0cd54606d548518642bfbce9",
+          "url": "https://files.pythonhosted.org/packages/48/2d/748c97ed6a4e8ae38666fd2c42967296222b7902321cff939f60d5a72b55/clr_loader-0.2.8-py3-none-any.whl",
+          "published": "2025-10-20T21:02:47.476162Z"
+        }
+      ]
+    },
+    {
+      "name": "cffi",
+      "version": "1.17.1",
+      "requires": [
+        "pycparser"
+      ],
+      "license": "MIT",
+      "wheels": [
+        {
+          "file": "cffi-1.17.1-cp310-cp310-win_amd64.whl",
+          "sha256": "0f048dcf80db46f0098ccac01132761580d28e28bc0f78ae0d58048063317e15",
+          "url": "https://files.pythonhosted.org/packages/d1/b6/0b0f5ab93b0df4acc49cae758c81fe4e5ef26c3ae2e10cc69249dfd8b3ab/cffi-1.17.1-cp310-cp310-win_amd64.whl",
+          "published": "2024-09-04T20:43:49.812105Z"
+        },
+        {
+          "file": "cffi-1.17.1-cp311-cp311-win_amd64.whl",
+          "sha256": "caaf0640ef5f5517f49bc275eca1406b0ffa6aa184892812030f04c2abf589a0",
+          "url": "https://files.pythonhosted.org/packages/3d/97/50228be003bb2802627d28ec0627837ac0bf35c90cf769812056f235b2d1/cffi-1.17.1-cp311-cp311-win_amd64.whl",
+          "published": "2024-09-04T20:44:10.873414Z"
+        },
+        {
+          "file": "cffi-1.17.1-cp312-cp312-win_amd64.whl",
+          "sha256": "51392eae71afec0d0c8fb1a53b204dbb3bcabcb3c9b807eedf3e1e6ccf2de903",
+          "url": "https://files.pythonhosted.org/packages/50/b9/db34c4755a7bd1cb2d1603ac3863f22bcecbd1ba29e5ee841a4bc510b294/cffi-1.17.1-cp312-cp312-win_amd64.whl",
+          "published": "2024-09-04T20:44:27.578716Z"
+        },
+        {
+          "file": "cffi-1.17.1-cp313-cp313-win_amd64.whl",
+          "sha256": "f6a16c31041f09ead72d69f583767292f750d24913dadacf5756b966aacb3f1a",
+          "url": "https://files.pythonhosted.org/packages/7c/fc/6a8cb64e5f0324877d503c854da15d76c1e50eb722e320b15345c4d0c6de/cffi-1.17.1-cp313-cp313-win_amd64.whl",
+          "published": "2024-09-04T20:44:45.309281Z"
+        },
+        {
+          "file": "cffi-1.17.1-cp38-cp38-win_amd64.whl",
+          "sha256": "78122be759c3f8a014ce010908ae03364d00a1f81ab5c7f4a7a5120607ea56e1",
+          "url": "https://files.pythonhosted.org/packages/2f/70/80c33b044ebc79527447fd4fbc5455d514c3bb840dede4455de97da39b4d/cffi-1.17.1-cp38-cp38-win_amd64.whl",
+          "published": "2024-09-04T20:44:59.963042Z"
+        },
+        {
+          "file": "cffi-1.17.1-cp39-cp39-win_amd64.whl",
+          "sha256": "d016c76bdd850f3c626af19b0542c9677ba156e4ee4fccfdd7848803533ef662",
+          "url": "https://files.pythonhosted.org/packages/8c/52/b08750ce0bce45c143e1b5d7357ee8c55341b52bdef4b0f081af1eb248c2/cffi-1.17.1-cp39-cp39-win_amd64.whl",
+          "published": "2024-09-04T20:45:20.226692Z"
+        }
+      ]
+    },
+    {
+      "name": "pycparser",
+      "version": "2.22",
+      "requires": null,
+      "license": "BSD-3-Clause",
+      "wheels": [
+        {
+          "file": "pycparser-2.22-py3-none-any.whl",
+          "sha256": "c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc",
+          "url": "https://files.pythonhosted.org/packages/13/a3/a812df4e2dd5696d1f351d58b8fe16a405b234ad2886a0dab9183fb78109/pycparser-2.22-py3-none-any.whl",
+          "published": "2024-03-30T13:22:20.476234Z"
+        }
+      ]
+    },
+    {
+      "name": "PyInstaller",
+      "version": "6.22.2",
+      "requires": [
+        "altgraph",
+        "importlib-metadata>=4.6; python_version < \"3.10\"",
+        "macholib>=1.8; sys_platform == \"darwin\"",
+        "packaging>=22.0",
+        "pefile>=2022.5.30; sys_platform == \"win32\"",
+        "pyinstaller-hooks-contrib>=2026.6",
+        "pywin32-ctypes>=0.2.1; sys_platform == \"win32\"",
+        "setuptools>=42.0.0",
+        "argcomplete; extra == \"completion\"",
+        "execnet>=1.5.0; extra == \"hook-testing\"",
+        "psutil; extra == \"hook-testing\"",
+        "pytest>=2.7.3; extra == \"hook-testing\""
+      ],
+      "license": "GPLv2-or-later with a special exception which allows to use PyInstaller to build and distribute non-free programs (including commercial ones)",
+      "wheels": [
+        {
+          "file": "pyinstaller-6.22.2-py3-none-win_amd64.whl",
+          "sha256": "9b990fa6bbe143572f06644a984ad0d7aa2e2ccc6929d4916031343a5888e9a7",
+          "url": "https://files.pythonhosted.org/packages/3f/53/8ba1d0f6159b490f700eac6161a4be5f0d4672608a6dae9fd73679f183ee/pyinstaller-6.22.2-py3-none-win_amd64.whl",
+          "published": "2026-08-17T20:52:59.667097Z"
+        }
+      ]
+    },
+    {
+      "name": "pyinstaller-hooks-contrib",
+      "version": "2026.7",
+      "requires": [
+        "importlib_metadata>=4.6; python_version < \"3.10\"",
+        "packaging>=22.0"
+      ],
+      "license": null,
+      "wheels": [
+        {
+          "file": "pyinstaller_hooks_contrib-2026.7-py3-none-any.whl",
+          "sha256": "24257a04c7a5a7a034cf28e39dcee20fbeeb9f043076729480f2e1b69904408a",
+          "url": "https://files.pythonhosted.org/packages/0a/67/350377af7b50416344ab8792756d414eef7629c618a73e9a0b13bb1552d9/pyinstaller_hooks_contrib-2026.7-py3-none-any.whl",
+          "published": "2026-08-24T21:26:57.274543Z"
+        }
+      ]
+    },
+    {
+      "name": "packaging",
+      "version": "26.3",
+      "requires": null,
+      "license": "Apache-2.0 OR BSD-2-Clause",
+      "wheels": [
+        {
+          "file": "packaging-26.3-py3-none-any.whl",
+          "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+          "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+          "published": "2026-08-04T18:15:27.159957Z"
+        }
+      ]
+    },
+    {
+      "name": "altgraph",
+      "version": "0.17.5",
+      "requires": null,
+      "license": "MIT",
+      "wheels": [
+        {
+          "file": "altgraph-0.17.5-py2.py3-none-any.whl",
+          "sha256": "f3a22400bce1b0c701683820ac4f3b159cd301acab067c51c653e06961600597",
+          "url": "https://files.pythonhosted.org/packages/a9/ba/000a1996d4308bc65120167c21241a3b205464a2e0b58deda26ae8ac21d1/altgraph-0.17.5-py2.py3-none-any.whl",
+          "published": "2025-11-21T20:35:49.444851Z"
+        }
+      ]
+    },
+    {
+      "name": "pefile",
+      "version": "2024.8.26",
+      "requires": null,
+      "license": "MIT",
+      "wheels": [
+        {
+          "file": "pefile-2024.8.26-py3-none-any.whl",
+          "sha256": "76f8b485dcd3b1bb8166f1128d395fa3d87af26360c2358fb75b80019b957c6f",
+          "url": "https://files.pythonhosted.org/packages/54/16/12b82f791c7f50ddec566873d5bdd245baa1491bac11d15ffb98aecc8f8b/pefile-2024.8.26-py3-none-any.whl",
+          "published": "2024-08-26T21:01:02.632515Z"
+        }
+      ]
+    },
+    {
+      "name": "pywin32-ctypes",
+      "version": "0.2.3",
+      "requires": null,
+      "license": "BSD-3-Clause",
+      "wheels": [
+        {
+          "file": "pywin32_ctypes-0.2.3-py3-none-any.whl",
+          "sha256": "8a1513379d709975552d202d942d9837758905c8d01eb82b8bcc30918929e7b8",
+          "url": "https://files.pythonhosted.org/packages/de/3d/8161f7711c017e01ac9f008dfddd9410dff3674334c233bde66e7ba65bbf/pywin32_ctypes-0.2.3-py3-none-any.whl",
+          "published": "2024-08-14T10:15:33.187242Z"
+        }
+      ]
+    },
+    {
+      "name": "setuptools",
+      "version": "80.9.0",
+      "requires": [
+        "pytest!=8.1.*,>=6; extra == \"test\"",
+        "virtualenv>=13.0.0; extra == \"test\"",
+        "wheel>=0.44.0; extra == \"test\"",
+        "pip>=19.1; extra == \"test\"",
+        "packaging>=24.2; extra == \"test\"",
+        "jaraco.envs>=2.2; extra == \"test\"",
+        "pytest-xdist>=3; extra == \"test\"",
+        "jaraco.path>=3.7.2; extra == \"test\"",
+        "build[virtualenv]>=1.0.3; extra == \"test\"",
+        "filelock>=3.4.0; extra == \"test\"",
+        "ini2toml[lite]>=0.14; extra == \"test\"",
+        "tomli-w>=1.0.0; extra == \"test\"",
+        "pytest-timeout; extra == \"test\"",
+        "pytest-perf; sys_platform != \"cygwin\" and extra == \"test\"",
+        "jaraco.develop>=7.21; (python_version >= \"3.9\" and sys_platform != \"cygwin\") and extra == \"test\"",
+        "pytest-home>=0.5; extra == \"test\"",
+        "pytest-subprocess; extra == \"test\"",
+        "pyproject-hooks!=1.1; extra == \"test\"",
+        "jaraco.test>=5.5; extra == \"test\"",
+        "sphinx>=3.5; extra == \"doc\"",
+        "jaraco.packaging>=9.3; extra == \"doc\"",
+        "rst.linker>=1.9; extra == \"doc\"",
+        "furo; extra == \"doc\"",
+        "sphinx-lint; extra == \"doc\"",
+        "jaraco.tidelift>=1.4; extra == \"doc\"",
+        "pygments-github-lexers==0.0.5; extra == \"doc\"",
+        "sphinx-favicon; extra == \"doc\"",
+        "sphinx-inline-tabs; extra == \"doc\"",
+        "sphinx-reredirects; extra == \"doc\"",
+        "sphinxcontrib-towncrier; extra == \"doc\"",
+        "sphinx-notfound-page<2,>=1; extra == \"doc\"",
+        "pyproject-hooks!=1.1; extra == \"doc\"",
+        "towncrier<24.7; extra == \"doc\"",
+        "packaging>=24.2; extra == \"core\"",
+        "more_itertools>=8.8; extra == \"core\"",
+        "jaraco.text>=3.7; extra == \"core\"",
+        "importlib_metadata>=6; python_version < \"3.10\" and extra == \"core\"",
+        "tomli>=2.0.1; python_version < \"3.11\" and extra == \"core\"",
+        "wheel>=0.43.0; extra == \"core\"",
+        "platformdirs>=4.2.2; extra == \"core\"",
+        "jaraco.functools>=4; extra == \"core\"",
+        "more_itertools; extra == \"core\"",
+        "pytest-checkdocs>=2.4; extra == \"check\"",
+        "pytest-ruff>=0.2.1; sys_platform != \"cygwin\" and extra == \"check\"",
+        "ruff>=0.8.0; sys_platform != \"cygwin\" and extra == \"check\"",
+        "pytest-cov; extra == \"cover\"",
+        "pytest-enabler>=2.2; extra == \"enabler\"",
+        "pytest-mypy; extra == \"type\"",
+        "mypy==1.14.*; extra == \"type\"",
+        "importlib_metadata>=7.0.2; python_version < \"3.10\" and extra == \"type\"",
+        "jaraco.develop>=7.21; sys_platform != \"cygwin\" and extra == \"type\""
+      ],
+      "license": "MIT",
+      "wheels": [
+        {
+          "file": "setuptools-80.9.0-py3-none-any.whl",
+          "sha256": "062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922",
+          "url": "https://files.pythonhosted.org/packages/a3/dc/17031897dae0efacfea57dfd3a82fdd2a2aeb58e0ff71b77b87e44edc772/setuptools-80.9.0-py3-none-any.whl",
+          "published": "2025-05-27T00:56:49.664463Z"
+        }
+      ]
+    }
+  ]
+}

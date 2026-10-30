@@ -1,0 +1,11 @@
+{
+  "note": "Caption fonts bundled with 简幕. Every file is pinned to an immutable source and verified by SHA-256 before use. All are SIL Open Font License 1.1.",
+  "fonts": [
+    {"file": "NotoSerifSC.ttf", "label": "思源宋体", "family": "Noto Serif SC", "version": "2.003", "source": "https://raw.githubusercontent.com/google/fonts/9710da1eacb3be272583c3224dcb70f9da6eadbb/ofl/notoserifsc/NotoSerifSC%5Bwght%5D.ttf", "sha256": "050080d9255a86808f2945bffac582b31ef32bc36411ce29563b4961670c66f9", "size": 25125512, "license": "OFL-NotoSerifSC.txt"},
+    {"file": "LXGWWenKai-Regular.ttf", "label": "霞鹜文楷", "family": "LXGW WenKai", "version": "1.522", "source": "https://github.com/lxgw/LxgwWenKai/releases/download/v1.522/LXGWWenKai-Regular.ttf", "sha256": "39ad71264b588165b469e35e6afb162a378dacd1f95348160240ba9038ac3009", "size": 25575676, "license": "OFL-LXGWWenKai.txt"},
+    {"file": "MaShanZheng-Regular.ttf", "label": "马善政楷书", "family": "Ma Shan Zheng", "version": "2.003", "source": "https://raw.githubusercontent.com/google/fonts/9710da1eacb3be272583c3224dcb70f9da6eadbb/ofl/mashanzheng/MaShanZheng-Regular.ttf", "sha256": "6d2546bb189c732a8ca29af9e22457b152387d158aa459e4ac2ce1e51788b7fb", "size": 5857936, "license": "OFL-MaShanZheng.txt"}
+  ],
+  "shared": [
+    {"file": "../../../../frontend/public/fonts/NotoSansSC.ttf", "packaged_as": "frontend/fonts/NotoSansSC.ttf", "label": "思源黑体", "family": "Noto Sans SC", "license": "../../../../frontend/public/fonts/OFL.txt", "note": "Shared with the interface font; not duplicated."}
+  ]
+}

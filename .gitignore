@@ -1,0 +1,41 @@
+# The repository holds only what builds, tests and releases the Windows installer.
+# Everything else in this folder (design files, sample images, the manual, notes,
+# local tool state) stays on this machine.
+/*
+!/.github/
+!/.gitattributes
+!/.gitignore
+!/.npmrc
+!/README.md
+!/docs/
+!/frontend/
+!/packaging/
+!/pyproject.toml
+!/requirements.in
+!/requirements-win.lock
+!/run_desktop.py
+!/scripts/
+!/src/
+!/tests/
+
+/docs/*
+!/docs/RELEASING.md
+!/docs/NPM_SUPPLY_CHAIN.md
+
+# Retired Qt interface and its tools
+/src/subtitle_app/ui/
+/src/subtitle_app/main.py
+/tests/test_ui_flow.py
+/tests/test_smoke_mode.py
+/scripts/qa_preview.py
+/scripts/render_ui_qa.py
+
+.DS_Store
+__pycache__/
+*.py[cod]
+*.subtitle-project.json
+*.subtitle-project.json.bak
+
+# Update signing keys never belong in the repository
+*.pem
+*.key

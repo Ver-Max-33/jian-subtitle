@@ -1,0 +1,5 @@
+pywebview==6.2.1
+Pillow==12.3.0
+numpy==2.4.6
+opencv-python==4.14.0.94
+fonttools==4.63.0

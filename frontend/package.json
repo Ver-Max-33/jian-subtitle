@@ -1,0 +1,25 @@
+{
+  "name": "jian-subtitle-ui",
+  "version": "0.2.0",
+  "private": true,
+  "overrides": { "use-sync-external-store": "1.6.0" },
+  "type": "module",
+  "engines": { "node": ">=22.14.0 <23", "npm": ">=10.9.2 <11" },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "node scripts/build.mjs",
+    "guard": "node scripts/dependency-guard.mjs"
+  },
+  "dependencies": {
+    "@base-ui/react": "1.7.0",
+    "lucide-react": "1.35.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3"
+  }
+}

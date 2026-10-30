@@ -1,0 +1,757 @@
+{
+  "checkedAt": "2026-10-30T15:04:31.830Z",
+  "lockSha256": "38db775e5d7d5a54d2e22a89dcec644e5d41f4ea8374dc8efde0b6827938addd",
+  "minimumAgeDays": 14,
+  "rows": [
+    {
+      "name": "@babel/runtime",
+      "version": "7.29.7",
+      "published": "2026-05-25T11:15:33.978Z",
+      "ageDays": 158,
+      "integrity": "sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "https://github.com/babel/babel.git",
+        "type": "git",
+        "directory": "packages/babel-runtime"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@base-ui/react",
+      "version": "1.7.0",
+      "published": "2026-08-04T09:55:20.089Z",
+      "ageDays": 87,
+      "integrity": "sha512-j+8QjX44C32jrXD/qyEAGpFr70FRpGL2CY61mQd9nBPWN737CK0xxD1ceJ055rW4RtdvFDT1e7otzdlfxvsYug==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/mui/base-ui.git",
+        "type": "git",
+        "directory": "packages/react"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "use-sync-external-store",
+      "version": "1.6.0",
+      "published": "2025-10-01T21:39:12.499Z",
+      "ageDays": 393,
+      "integrity": "sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/facebook/react.git",
+        "type": "git",
+        "directory": "packages/use-sync-external-store"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@base-ui/utils",
+      "version": "0.3.2",
+      "published": "2026-08-04T09:53:12.420Z",
+      "ageDays": 87,
+      "integrity": "sha512-oWy1aq/I2GmYjpl4PhEAhzflF8VPGKgZeq0xAWTbfD5KBWyxcN0ZP2+WHSUm/5Z6lVMBDLReLcoXwSYoRc/zNQ==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/mui/base-ui.git",
+        "type": "git",
+        "directory": "packages/utils"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "use-sync-external-store",
+      "version": "1.6.0",
+      "published": "2025-10-01T21:39:12.499Z",
+      "ageDays": 393,
+      "integrity": "sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/facebook/react.git",
+        "type": "git",
+        "directory": "packages/use-sync-external-store"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/aix-ppc64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:20.989Z",
+      "ageDays": 82,
+      "integrity": "sha512-XExcO+dvLKvVtNTibSTBej1NCAbaGhWn9Ww1ZPx80qsahhPFe/8jgWP0IchNe0F3HwkU7n8ejhH8bjonqht8mQ==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/android-arm",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:57:26.487Z",
+      "ageDays": 82,
+      "integrity": "sha512-kXXoiPVVGQcnIYGOeaovwOURpniDBpSq4A03qkQ+BMQqtGG6HYap3xne9C1O1yo4TR3qxlCX5IqqmX6fFo2Lqg==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/android-arm64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:59:33.520Z",
+      "ageDays": 82,
+      "integrity": "sha512-5YfKeeI8qWfBZIX+u2xZC3Zlb3Os/gLS2sbEKM+I4ZOcsWmHS2WLysCcQZDAFRslDUU5Oiq44gf6PYN1vGwG5A==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/android-x64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:59:39.478Z",
+      "ageDays": 82,
+      "integrity": "sha512-O387ite7SzUyCcy3JQX4P4bLtEA7bLLkx+esve5JHnyYfNTxcVpXZo9jhdB0lTKN44gztELTdU7nS8Nr16Fs1Q==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/darwin-arm64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:43.690Z",
+      "ageDays": 82,
+      "integrity": "sha512-n4KqkOQrraxHJcgjM1RvwbigfQKIKJVpM7xp+KsxiyUSrRdIXnt73VhrPAx0fV44hgfmIVKjxMN9J1t5jySVkw==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/darwin-x64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:57:49.027Z",
+      "ageDays": 82,
+      "integrity": "sha512-uq6suIWYP37qzGddBKPw5QEQPi6HiLGsO7UmkpfyaYNQ3D+rN6w6WfwH+nuqcGXWvawGwxOEroO4YGnFh95azw==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/freebsd-arm64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:54.493Z",
+      "ageDays": 82,
+      "integrity": "sha512-n+I0BTSRIoy+d6RPKnEVwql5UwBJolytvY4mAOIEJorKlqgPII8ix6slVVrfZ5Tnj7glIZvloylbB/EJPMWEXw==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/freebsd-x64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:57:59.211Z",
+      "ageDays": 82,
+      "integrity": "sha512-78XJTJkvPs0kz2w61301PJjXl4g7q3JqiYMZ/M/yVI73EHBrCRTgkhu9oqG7vPqq+a/yadEW8aD+agKlk5xrmg==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/linux-arm",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:59:05.063Z",
+      "ageDays": 82,
+      "integrity": "sha512-XlDnu2q5yoqems+xay6wSAcg9DDD7K9RLKZEBOMZm3ckNpJBvOX20tSfby8KfrrhINDyv9V2YVZKY/SpoGJI8w==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/linux-arm64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:09.809Z",
+      "ageDays": 82,
+      "integrity": "sha512-pW4AC0P3it8c7do9MVM4p51FzHzdM/TZrerurgRcHJ2WTa1VQ1CIq18xncfpBJw4ojkiZZrKW2yIBWBP92j6Ug==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/linux-ia32",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:59:16.606Z",
+      "ageDays": 82,
+      "integrity": "sha512-CYbnj78HsIeA+DhgUKgFCfvNsTHFhMMrinUrMZpDXJXKN8T3XViTZ/+wtHeVxEWY8ewSzTFN+nRmSwO2tZaLUQ==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/linux-loong64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:20.989Z",
+      "ageDays": 82,
+      "integrity": "sha512-buwkd8nsph4R+ajRvw0qM5Hja/TXQow3ptzWO2EbG/cqcIkHloRrdlBtQlshyYGTNFvfkfJ5tpPLVkY4DtsPfQ==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/linux-mips64el",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:59:27.374Z",
+      "ageDays": 82,
+      "integrity": "sha512-ZVykbDyk7519VwiNb9Lcj9m8XM6v5V9uKPvrEMkkEedVewf+0itkhahp4HDpgERXhwLRpWFypsGbG/J8s0QjJA==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/linux-ppc64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:31.588Z",
+      "ageDays": 82,
+      "integrity": "sha512-CAXl+Dtd9UUuJd8pKKdwh6MLm3MUMiqMPmhZ3tTSXPqfyQ3vDl6R5hZdZ/kYojK4ofXtdfSv1tFq8XzWx3heNQ==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/linux-riscv64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:36.707Z",
+      "ageDays": 82,
+      "integrity": "sha512-GeXCej4IQtU1B+QlDV8W/RRvbzI3O/Stss+/bCXv4lZls5WGRtu2a+3JkA3i4qIUlMXpcHebWpF8AkJhATowuA==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/linux-s390x",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:42.447Z",
+      "ageDays": 82,
+      "integrity": "sha512-3H1weTYZPxt/WOhByszQZybS9w5lKzUn1FDMsgEChbHWQwHYQQRfBxgCcZvPhjHfKyJjIievvMmEUawJrdY9Dg==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/linux-x64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:48.257Z",
+      "ageDays": 82,
+      "integrity": "sha512-4xTZr1FUmSoQW4XIWmit3tzQrUTZM+N3P0XV8xROKYF50XfI7xeO90+1bZvNwxIufQ9hDQVRJH5YhgPVF8A/HQ==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/netbsd-arm64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:52.524Z",
+      "ageDays": 82,
+      "integrity": "sha512-sSATRjPeDBg3pdgHoQfoYBob11Kk1FGa9lui5RIHZCoCkJa9QKlvl3/vKz2usCmYYjs7ymJR/2Nnsqe+Hjt5nw==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/netbsd-x64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:58:58.511Z",
+      "ageDays": 82,
+      "integrity": "sha512-lqnzCV+mM0gIADaKihiCg6ifgfU2L3h5E33rNQBN1Y4MaVGnzryzmvvf7UHxprpQdE8hpqLolJ9Rl+SkIRDpyw==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/openbsd-arm64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:59:03.431Z",
+      "ageDays": 82,
+      "integrity": "sha512-AL2qJILH7lNjrDmCQDvdxMfAUIv8KMNZOvrwAQ8i8//ntL9FflhOyMJ8OZSMBb8/AWXe3/5v5S20y3zCoZWKoQ==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/openbsd-x64",
+      "version": "0.28.2",
+      "published": "2026-08-08T20:00:09.977Z",
+      "ageDays": 82,
+      "integrity": "sha512-QtiuPytchRyC4rwUKhexJdQKvDuZ6hWloi3igqPQNUJCS1/v9EiO3UTOXR6A3FoMo4fnAKbWJdqaIwhOzh8qEw==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/openharmony-arm64",
+      "version": "0.28.2",
+      "published": "2026-08-08T20:03:17.337Z",
+      "ageDays": 82,
+      "integrity": "sha512-WkhYDmpTjLvGlScA1rwjRUmhl4k8oXR3cIbtqWmELgU/dFeHHlEllxDvdWcNJV9rbzCexB5vz8gtNewWLgCT7Q==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/sunos-x64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:59:20.135Z",
+      "ageDays": 82,
+      "integrity": "sha512-GPMSkTOtMnv2U2F8gxe4Io6qmVs+YKyp832Etqqxr0hFngmXQ3rzwytelm3GIn7T4VviRUlf3sOgBOiTdvaf7g==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/win32-arm64",
+      "version": "0.28.2",
+      "published": "2026-08-08T19:59:31.389Z",
+      "ageDays": 82,
+      "integrity": "sha512-PIhhEkE9uPBleRBrQEJpUn7MBnibZzbGzYWPmY3x+YoVg/95zbjB4CxPPOQ8l5tYYM4mMaCthF8/1DIfBQQyWQ==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/win32-ia32",
+      "version": "0.28.2",
+      "published": "2026-08-08T20:01:38.665Z",
+      "ageDays": 82,
+      "integrity": "sha512-YmJbfTlvU7Sdn9BB+4PRES4oB6pxgS37MAONj+hBr/cpXS1aBPKXxNnDbu+QCWPj0o9dgyxeq79g6c5P8KeuYA==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@esbuild/win32-x64",
+      "version": "0.28.2",
+      "published": "2026-08-08T20:00:43.500Z",
+      "ageDays": 82,
+      "integrity": "sha512-5ebpxr3nWMzrL/rnUI755Jkuee0bHL/Gq0WTF9lvcpv73wAp5eu8MfBUgWK9bhWvZjj7yX8etf/8tI8Ney695g==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@floating-ui/core",
+      "version": "1.8.0",
+      "published": "2026-07-11T08:41:32.920Z",
+      "ageDays": 111,
+      "integrity": "sha512-0CIZ5itps/8x7BG8dEIhs53BvCUH2PCoogtakwRTut+Arm58sJooJ0AuZhLw2HJYIR5cMLNPBSS728sPho2khQ==",
+      "license": "MIT",
+      "scripts": {
+        "test": "vitest run",
+        "test:watch": "vitest watch",
+        "lint": "eslint .",
+        "format": "prettier --ignore-path ../../.gitignore --write .",
+        "clean": "rimraf dist out-tsc",
+        "dev": "rollup -c -w",
+        "build": "rollup -c",
+        "build:api": "build-api --tsc tsconfig.lib.json",
+        "publint": "publint",
+        "typecheck": "tsc -b"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/floating-ui/floating-ui.git",
+        "directory": "packages/core"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@floating-ui/dom",
+      "version": "1.8.0",
+      "published": "2026-07-11T08:41:32.794Z",
+      "ageDays": 111,
+      "integrity": "sha512-yXSrzeHZBTZadLOlfyhCkJHNeLJnHRnRInwdZ40L7ZiaAtrBwoYlsDrX3v5zB1Utk7CLfzcOVnVVWoXEky7Ceg==",
+      "license": "MIT",
+      "scripts": {
+        "lint": "eslint .",
+        "format": "prettier --ignore-path ../../.gitignore --write .",
+        "clean": "rimraf dist out-tsc test-results",
+        "dev": "vite",
+        "build": "rollup -c",
+        "build:api": "build-api --tsc tsconfig.lib.json",
+        "test": "vitest run",
+        "test:watch": "vitest watch",
+        "test:browser": "TEST_ENV=browser vitest --browser",
+        "publint": "publint",
+        "playwright": "playwright test ./test/functional",
+        "typecheck": "tsc -b"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/floating-ui/floating-ui.git",
+        "directory": "packages/dom"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@floating-ui/react-dom",
+      "version": "2.1.9",
+      "published": "2026-07-11T08:41:32.791Z",
+      "ageDays": 111,
+      "integrity": "sha512-JDjEFGCpImxDCA7JJKviA0M9+RtmJdj0m/NVU5IMgBK+AmZouAQQ7/+2GLH0GXXY0YMw9oXPB8hKdbPYg5QLYg==",
+      "license": "MIT",
+      "scripts": {
+        "lint": "eslint .",
+        "format": "prettier --ignore-path ../../.gitignore --write .",
+        "clean": "rimraf dist out-tsc",
+        "test": "vitest run",
+        "test:watch": "vitest watch",
+        "build": "rollup -c",
+        "build:api": "build-api --tsc tsconfig.lib.json",
+        "publint": "publint",
+        "typecheck": "tsc -b"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/floating-ui/floating-ui.git",
+        "directory": "packages/react-dom"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@floating-ui/utils",
+      "version": "0.2.12",
+      "published": "2026-07-11T08:41:33.036Z",
+      "ageDays": 111,
+      "integrity": "sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==",
+      "license": "MIT",
+      "scripts": {
+        "lint": "eslint .",
+        "format": "prettier --ignore-path ../../.gitignore --write .",
+        "clean": "rimraf dist out-tsc dom react",
+        "test": "vitest run --globals",
+        "test:watch": "vitest watch --globals",
+        "dev": "rollup -c -w",
+        "build": "rollup -c",
+        "build:api": "build-api --tsc tsconfig.lib.json --aec api-extractor.json --aec api-extractor.dom.json --aec api-extractor.react.json",
+        "publint": "publint",
+        "typecheck": "tsc -b"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/floating-ui/floating-ui.git",
+        "directory": "packages/utils"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@types/react",
+      "version": "19.2.18",
+      "published": "2026-07-30T21:54:03.456Z",
+      "ageDays": 91,
+      "integrity": "sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "type": "git",
+        "directory": "types/react"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "@types/react-dom",
+      "version": "19.2.5",
+      "published": "2026-08-23T21:05:23.671Z",
+      "ageDays": 67,
+      "integrity": "sha512-fMPwH9v7r/pp43yUd2/Mbiex5KouJwwR3dzHkhLREUC6764VyDsqxhAxv6OFEYR1RhjOyD1naqba8ECDBe7ZQg==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "type": "git",
+        "directory": "types/react-dom"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "csstype",
+      "version": "3.2.3",
+      "published": "2025-11-17T11:42:27.045Z",
+      "ageDays": 347,
+      "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==",
+      "license": "MIT",
+      "scripts": {
+        "prepublish": "npm install --no-save --prefix __tests__ && npm install --no-save --prefix __tests__/__fixtures__",
+        "release": "release-it",
+        "update": "tsx update.ts",
+        "build": "tsx --inspect build.ts --start",
+        "watch": "tsx build.ts --watch",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+        "pretty": "prettier --write build.ts **/*.{ts,js,json,md}",
+        "lazy": "tsc && npm run lint",
+        "test": "jest --runInBand",
+        "test:src": "jest src.*.ts",
+        "test:dist": "jest dist.*.ts --runInBand"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/frenic/csstype.git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "esbuild",
+      "version": "0.28.2",
+      "published": "2026-08-08T20:00:55.454Z",
+      "ageDays": 82,
+      "integrity": "sha512-HKVLS8dvII+xoKW9kmqxbRKrnWEXfJJr/FZhhJmiqIB0e053QNYFqOBouTMO/k5sID4MvCiUCvv8b9M4h32wIA==",
+      "license": "MIT",
+      "scripts": {
+        "postinstall": "node install.js"
+      },
+      "repository": {
+        "url": "git+https://github.com/evanw/esbuild.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "lucide-react",
+      "version": "1.35.0",
+      "published": "2026-08-28T07:10:29.013Z",
+      "ageDays": 63,
+      "integrity": "sha512-yXCCWxGFYT6bLIPYC4SY6fPQPRs/d797rRIue+J9XP2Td6vQvD53gaQRBCnIVT1kTQRHtAtxlfOQNWAuIF8ELg==",
+      "license": "ISC",
+      "scripts": {
+        "test": "pnpm build:icons && vitest run",
+        "build": "pnpm clean && pnpm copy:license && pnpm build:icons && pnpm typecheck && pnpm build:bundles",
+        "clean": "rm -rf dist && rm -rf stats && rm -rf ./src/icons/*.ts && rm -f dynamic.{d.ts,d.mts,mts,mjs,mjs.map} && rm -f dynamicIconImports.d.ts",
+        "typecheck": "tsc",
+        "test:watch": "vitest watch",
+        "build:icons": "build-icons --output=./src --templateSrc=./scripts/exportTemplate.mts --renderUniqueKey --withAliases --withDynamicImports --separateAliasesFile --separateAliasesFileIgnore=fingerprint --aliasesFileExtension=.ts --iconFileExtension=.ts --exportFileName=index.ts",
+        "copy:license": "cp ../../LICENSE ./LICENSE",
+        "build:bundles": "rollup -c ./rollup.config.mjs",
+        "typecheck:watch": "tsc -w"
+      },
+      "repository": {
+        "url": "https://github.com/lucide-icons/lucide.git",
+        "type": "git",
+        "directory": "packages/lucide-react"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "react",
+      "version": "19.2.8",
+      "published": "2026-07-21T15:41:28.716Z",
+      "ageDays": 100,
+      "integrity": "sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/react/react.git",
+        "type": "git",
+        "directory": "packages/react"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "react-dom",
+      "version": "19.2.8",
+      "published": "2026-07-21T15:41:41.267Z",
+      "ageDays": 100,
+      "integrity": "sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ==",
+      "license": "MIT",
+      "scripts": {
+        "start": "node server.js"
+      },
+      "repository": {
+        "url": "git+https://github.com/react/react.git",
+        "type": "git",
+        "directory": "packages/react-dom"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "reselect",
+      "version": "5.3.0",
+      "published": "2026-08-22T02:13:00.013Z",
+      "ageDays": 69,
+      "integrity": "sha512-XGoLeRAVzUTcJ1qkxPQhDJyIZ5d6zzZD9nT7AEZOaaU9UbWclhycElmhO+VD5bFeLuzhPBaOV2oXC8uG35ZSpg==",
+      "license": "MIT",
+      "scripts": {
+        "lint": "eslint src test",
+        "test": "node --expose-gc ./node_modules/vitest/dist/cli-wrapper.js --run && yarn type-check",
+        "bench": "node --expose-gc ./node_modules/vitest/dist/cli-wrapper.js --run bench --mode production",
+        "build": "yarn clean && tsup",
+        "clean": "rimraf dist",
+        "format": "prettier --write \"{src,test}/**/*.{js,ts}\" \"bench/*.mjs\" \"docs/**/*.md\"",
+        "prepack": "yarn build",
+        "test:cov": "vitest run --coverage",
+        "docs:build": "yarn --cwd website build",
+        "docs:clear": "yarn --cwd website clear",
+        "docs:serve": "yarn --cwd website serve",
+        "docs:start": "yarn --cwd website start",
+        "test:watch": "node --expose-gc ./node_modules/vitest/dist/cli-wrapper.js --watch",
+        "type-check": "vitest --run --typecheck.only && yarn type-check:loose-null-checks",
+        "heap-snapshot": "yarn build && node --expose-gc ./scripts/weakMapMemoizeHeapSnapshot.mjs",
+        "bench:hot-path": "node ./bench/build.mjs && node --expose-gc ./bench/run.mjs",
+        "test:typescript": "tsc --noEmit -p typescript_test/tsconfig.json",
+        "type-check:trace": "vitest --run --typecheck.only && tsc --noEmit -p typescript_test/tsconfig.json --generateTrace trace && npx @typescript/analyze-trace trace && rimraf trace",
+        "bench:hot-path:dev": "node ./bench/build.mjs --dev && node --expose-gc ./bench/run.mjs",
+        "type-check:loose-null-checks": "tsc --noEmit -p type-tests/tsconfig.looseNullChecks.json"
+      },
+      "repository": {
+        "url": "git+https://github.com/reduxjs/reselect.git",
+        "type": "git"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "scheduler",
+      "version": "0.27.0",
+      "published": "2025-10-01T21:39:15.208Z",
+      "ageDays": 393,
+      "integrity": "sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==",
+      "license": "MIT",
+      "scripts": {},
+      "repository": {
+        "url": "git+https://github.com/facebook/react.git",
+        "type": "git",
+        "directory": "packages/scheduler"
+      },
+      "deprecated": null
+    },
+    {
+      "name": "typescript",
+      "version": "5.9.3",
+      "published": "2025-09-30T21:19:38.784Z",
+      "ageDays": 394,
+      "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+      "license": "Apache-2.0",
+      "scripts": {
+        "gulp": "hereby",
+        "knip": "hereby knip",
+        "lint": "hereby lint",
+        "test": "hereby runtests-parallel --light=false",
+        "build": "npm run build:compiler && npm run build:tests",
+        "clean": "hereby clean",
+        "format": "dprint fmt",
+        "build:tests": "hereby tests",
+        "setup-hooks": "node scripts/link-hooks.mjs",
+        "build:compiler": "hereby local",
+        "test:eslint-rules": "hereby run-eslint-rules-tests",
+        "build:tests:notypecheck": "hereby tests --no-typecheck"
+      },
+      "repository": {
+        "url": "git+https://github.com/microsoft/TypeScript.git",
+        "type": "git"
+      },
+      "deprecated": null
+    }
+  ]
+}

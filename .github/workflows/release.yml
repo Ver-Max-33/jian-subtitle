@@ -1,0 +1,89 @@
+# Builds the Windows installer and drafts a GitHub release.
+#
+#   python scripts/release.py version 0.3.0 && git commit -am "简幕 0.3.0" && git tag v0.3.0
+#   git push origin main v0.3.0           -> this workflow builds and creates a draft release
+#   python scripts/release.py publish v0.3.0   -> on your machine: verify, sign update.json, publish
+#
+# Run it by hand ("Run workflow") for a dry run: it builds and keeps the installer as a run artifact only.
+#
+# The build job runs repository code with read-only permissions and no secrets. The release job never
+# checks out or runs repository code; it attests and uploads the built installer as data. There is no
+# signing key here: in-app updates only accept update.json signed on the maintainer's machine.
+# Actions are pinned to full commit SHAs.
+name: release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - id: python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.11"
+          architecture: x64
+
+      - name: Check tag, version and update key
+        if: github.ref_type == 'tag'
+        env:
+          TAG: ${{ github.ref_name }}
+        run: python scripts/release.py check "$env:TAG"
+
+      - name: Build installer (tests, PyInstaller, Inno Setup)
+        env:
+          PYTHON_EXE: ${{ steps.python.outputs.python-path }}
+        run: ./scripts/build_windows.ps1 -Python "$env:PYTHON_EXE"
+
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: installer
+          path: dist/*/JianSubtitle-*-win-x64-setup.exe
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: installer
+          path: dist
+
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: dist/*.exe
+
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          cd dist
+          sha256sum -- *.exe > SHA256SUMS.txt
+          gh release create "$TAG" *.exe SHA256SUMS.txt --repo "$GITHUB_REPOSITORY" \
+            --draft --verify-tag --title "简幕 ${TAG#v}" --generate-notes

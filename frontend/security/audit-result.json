@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-10-30T15:04:24.914Z",
+  "lockSha256": "38db775e5d7d5a54d2e22a89dcec644e5d41f4ea8374dc8efde0b6827938addd",
+  "vulnerabilityExitCode": 0,
+  "audit": {
+    "auditReportVersion": 2,
+    "vulnerabilities": {},
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "dependencies": {
+        "prod": 17,
+        "dev": 29,
+        "optional": 26,
+        "peer": 0,
+        "peerOptional": 0,
+        "total": 45
+      }
+    }
+  },
+  "signatureExitCode": 0,
+  "signatureResult": "audited 20 packages in 1s\n\n20 packages have verified registry signatures\n\n13 packages have verified attestations\n\n",
+  "signatureStderr": "",
+  "boundary": "Known-vulnerability and signature checks are not proof of absence of malicious code."
+}

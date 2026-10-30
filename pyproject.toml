@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools==80.9.0", "wheel==0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jian-subtitle"
+version = "0.2.0"
+description = "Windows-first batch image caption editor"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "pywebview==6.2.1",
+  "Pillow==12.3.0",
+  "numpy==2.4.6",
+  "opencv-python==4.14.0.94",
+  "fonttools==4.63.0",
+]
+
+[project.gui-scripts]
+jian-subtitle = "subtitle_app.desktop:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,290 @@
+{
+  "target": "CPython 3.11 / Windows x64",
+  "status": "passed",
+  "boundary": "Wheel hashes and metadata only; Windows execution and installer acceptance still required.",
+  "packages": {
+    "altgraph": {
+      "version": "0.17.5",
+      "sha256": "f3a22400bce1b0c701683820ac4f3b159cd301acab067c51c653e06961600597",
+      "file": "altgraph-0.17.5-py2.py3-none-any.whl",
+      "requirements": []
+    },
+    "bottle": {
+      "version": "0.13.4",
+      "sha256": "045684fbd2764eac9cdeb824861d1551d113e8b683d8d26e296898d3dd99a12e",
+      "file": "bottle-0.13.4-py2.py3-none-any.whl",
+      "requirements": []
+    },
+    "cffi": {
+      "version": "1.17.1",
+      "sha256": "caaf0640ef5f5517f49bc275eca1406b0ffa6aa184892812030f04c2abf589a0",
+      "file": "cffi-1.17.1-cp311-cp311-win_amd64.whl",
+      "requirements": [
+        "pycparser"
+      ]
+    },
+    "clr-loader": {
+      "version": "0.2.8",
+      "sha256": "2cd76904e2f68fecab1ad1d158fb2905b5173a2b0cd54606d548518642bfbce9",
+      "file": "clr_loader-0.2.8-py3-none-any.whl",
+      "requirements": [
+        "cffi>=1.13; python_version <= \"3.8\"",
+        "cffi>=1.17; python_version >= \"3.8\""
+      ]
+    },
+    "fonttools": {
+      "version": "4.63.0",
+      "sha256": "063e08bd17bd5a90127a14123de0d6a952dbc847695fd98b63c043d58057f90c",
+      "file": "fonttools-4.63.0-cp311-cp311-win_amd64.whl",
+      "requirements": [
+        "lxml>=4.0; extra == \"lxml\"",
+        "brotli>=1.0.1; platform_python_implementation == \"CPython\" and extra == \"woff\"",
+        "brotlicffi>=0.8.0; platform_python_implementation != \"CPython\" and extra == \"woff\"",
+        "zopfli>=0.1.4; extra == \"woff\"",
+        "unicodedata2>=17.0.0; python_version <= \"3.14\" and extra == \"unicode\"",
+        "lz4>=1.7.4.2; extra == \"graphite\"",
+        "scipy; platform_python_implementation != \"PyPy\" and extra == \"interpolatable\"",
+        "munkres; platform_python_implementation == \"PyPy\" and extra == \"interpolatable\"",
+        "pycairo; extra == \"interpolatable\"",
+        "matplotlib; extra == \"plot\"",
+        "sympy; extra == \"symfont\"",
+        "xattr; sys_platform == \"darwin\" and extra == \"type1\"",
+        "skia-pathops>=0.5.0; extra == \"pathops\"",
+        "uharfbuzz>=0.45.0; extra == \"repacker\"",
+        "lxml>=4.0; extra == \"all\"",
+        "brotli>=1.0.1; platform_python_implementation == \"CPython\" and extra == \"all\"",
+        "brotlicffi>=0.8.0; platform_python_implementation != \"CPython\" and extra == \"all\"",
+        "zopfli>=0.1.4; extra == \"all\"",
+        "unicodedata2>=17.0.0; python_version <= \"3.14\" and extra == \"all\"",
+        "lz4>=1.7.4.2; extra == \"all\"",
+        "scipy; platform_python_implementation != \"PyPy\" and extra == \"all\"",
+        "munkres; platform_python_implementation == \"PyPy\" and extra == \"all\"",
+        "pycairo; extra == \"all\"",
+        "matplotlib; extra == \"all\"",
+        "sympy; extra == \"all\"",
+        "xattr; sys_platform == \"darwin\" and extra == \"all\"",
+        "skia-pathops>=0.5.0; extra == \"all\"",
+        "uharfbuzz>=0.45.0; extra == \"all\""
+      ]
+    },
+    "numpy": {
+      "version": "2.4.6",
+      "sha256": "1e254a00cdf42b1e4d5b3d68d33af63268d41340d8885df2ab6470f2e1500147",
+      "file": "numpy-2.4.6-cp311-cp311-win_amd64.whl",
+      "requirements": []
+    },
+    "opencv-python": {
+      "version": "4.14.0.94",
+      "sha256": "ace53616cdffc9643e17e075397b493e607c427d388c7508798ef7ad2ed577cc",
+      "file": "opencv_python-4.14.0.94-cp37-abi3-win_amd64.whl",
+      "requirements": [
+        "numpy<2.0; python_version < \"3.9\"",
+        "numpy>=2; python_version >= \"3.9\""
+      ]
+    },
+    "packaging": {
+      "version": "26.3",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+      "file": "packaging-26.3-py3-none-any.whl",
+      "requirements": []
+    },
+    "pefile": {
+      "version": "2024.8.26",
+      "sha256": "76f8b485dcd3b1bb8166f1128d395fa3d87af26360c2358fb75b80019b957c6f",
+      "file": "pefile-2024.8.26-py3-none-any.whl",
+      "requirements": []
+    },
+    "pillow": {
+      "version": "12.3.0",
+      "sha256": "8e95e1385e4998ae9694eeaa4730ba5457ff61185b3a55e2e7bea0880aef452a",
+      "file": "pillow-12.3.0-cp311-cp311-win_amd64.whl",
+      "requirements": [
+        "furo; extra == \"docs\"",
+        "olefile; extra == \"docs\"",
+        "sphinx>=8.2; extra == \"docs\"",
+        "sphinx-autobuild; extra == \"docs\"",
+        "sphinx-copybutton; extra == \"docs\"",
+        "sphinx-inline-tabs; extra == \"docs\"",
+        "sphinxext-opengraph; extra == \"docs\"",
+        "olefile; extra == \"fpx\"",
+        "olefile; extra == \"mic\"",
+        "arro3-compute; extra == \"test-arrow\"",
+        "arro3-core; extra == \"test-arrow\"",
+        "nanoarrow; extra == \"test-arrow\"",
+        "pyarrow; extra == \"test-arrow\"",
+        "coverage>=7.4.2; extra == \"tests\"",
+        "defusedxml; extra == \"tests\"",
+        "markdown2; extra == \"tests\"",
+        "olefile; extra == \"tests\"",
+        "packaging; extra == \"tests\"",
+        "pytest; extra == \"tests\"",
+        "pytest-cov; extra == \"tests\"",
+        "pytest-timeout; extra == \"tests\"",
+        "pytest-xdist; extra == \"tests\"",
+        "setuptools; extra == \"tests\"",
+        "trove-classifiers>=2024.10.12; extra == \"tests\"",
+        "defusedxml; extra == \"xmp\""
+      ]
+    },
+    "proxy-tools": {
+      "version": "0.1.0",
+      "sha256": "05181ea4ed7906aef614b59169270873b7bb3afdd77dd834b51ba29bc4e0d1d8",
+      "file": "proxy_tools-0.1.0-py3-none-any.whl",
+      "requirements": []
+    },
+    "pycparser": {
+      "version": "2.22",
+      "sha256": "c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc",
+      "file": "pycparser-2.22-py3-none-any.whl",
+      "requirements": []
+    },
+    "pyinstaller": {
+      "version": "6.22.2",
+      "sha256": "9b990fa6bbe143572f06644a984ad0d7aa2e2ccc6929d4916031343a5888e9a7",
+      "file": "pyinstaller-6.22.2-py3-none-win_amd64.whl",
+      "requirements": [
+        "altgraph",
+        "importlib-metadata>=4.6; python_version < '3.10'",
+        "macholib>=1.8; sys_platform == 'darwin'",
+        "packaging>=22.0",
+        "pefile>=2022.5.30; sys_platform == 'win32'",
+        "pyinstaller-hooks-contrib>=2026.6",
+        "pywin32-ctypes>=0.2.1; sys_platform == 'win32'",
+        "setuptools>=42.0.0",
+        "argcomplete; extra == 'completion'",
+        "execnet>=1.5.0; extra == 'hook-testing'",
+        "psutil; extra == 'hook-testing'",
+        "pytest>=2.7.3; extra == 'hook-testing'"
+      ]
+    },
+    "pyinstaller-hooks-contrib": {
+      "version": "2026.7",
+      "sha256": "24257a04c7a5a7a034cf28e39dcee20fbeeb9f043076729480f2e1b69904408a",
+      "file": "pyinstaller_hooks_contrib-2026.7-py3-none-any.whl",
+      "requirements": [
+        "importlib_metadata>=4.6; python_version < \"3.10\"",
+        "packaging>=22.0"
+      ]
+    },
+    "pythonnet": {
+      "version": "3.0.5",
+      "sha256": "f6702d694d5d5b163c9f3f5cc34e0bed8d6857150237fae411fefb883a656d20",
+      "file": "pythonnet-3.0.5-py3-none-any.whl",
+      "requirements": [
+        "clr_loader<0.3.0,>=0.2.7"
+      ]
+    },
+    "pywebview": {
+      "version": "6.2.1",
+      "sha256": "9d07275f53894ab4d5e2e0e996227193e7187dec276d9b624dccbce029216b46",
+      "file": "pywebview-6.2.1-py3-none-any.whl",
+      "requirements": [
+        "pythonnet; sys_platform == \"win32\"",
+        "pyobjc-core>=9.0; sys_platform == \"darwin\"",
+        "pyobjc-framework-Cocoa>=9.0; sys_platform == \"darwin\"",
+        "pyobjc-framework-Quartz>=9.0; sys_platform == \"darwin\"",
+        "pyobjc-framework-WebKit>=9.0; sys_platform == \"darwin\"",
+        "pyobjc-framework-security>=9.0; sys_platform == \"darwin\"",
+        "pyobjc-framework-UniformTypeIdentifiers>=9.0; sys_platform == \"darwin\"",
+        "QtPy; sys_platform == \"openbsd6\"",
+        "importlib_resources; python_version < \"3.9\"",
+        "proxy_tools",
+        "bottle",
+        "typing_extensions",
+        "cefpython3; extra == \"cef\"",
+        "PyGObject==3.50.0; extra == \"gtk\"",
+        "PyGObject-stubs; extra == \"gtk\"",
+        "QtPy; extra == \"pyside2\"",
+        "PySide2; extra == \"pyside2\"",
+        "QtPy; extra == \"pyside6\"",
+        "PySide6; extra == \"pyside6\"",
+        "QtPy; extra == \"qt\"",
+        "PyQt6; extra == \"qt\"",
+        "PyQt6-WebEngine; extra == \"qt\"",
+        "QtPy; extra == \"qt5\"",
+        "PyQt5; extra == \"qt5\"",
+        "pyqtwebengine; extra == \"qt5\"",
+        "QtPy; extra == \"qt6\"",
+        "PyQt6; extra == \"qt6\"",
+        "PyQt6-WebEngine; extra == \"qt6\"",
+        "jnius; extra == \"android\"",
+        "cryptography; extra == \"ssl\"",
+        "ruff; extra == \"dev\"",
+        "pre-commit; extra == \"dev\"",
+        "pytest; extra == \"dev\"",
+        "build; extra == \"dev\"",
+        "twine; extra == \"dev\""
+      ]
+    },
+    "pywin32-ctypes": {
+      "version": "0.2.3",
+      "sha256": "8a1513379d709975552d202d942d9837758905c8d01eb82b8bcc30918929e7b8",
+      "file": "pywin32_ctypes-0.2.3-py3-none-any.whl",
+      "requirements": []
+    },
+    "setuptools": {
+      "version": "80.9.0",
+      "sha256": "062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922",
+      "file": "setuptools-80.9.0-py3-none-any.whl",
+      "requirements": [
+        "pytest!=8.1.*,>=6; extra == \"test\"",
+        "virtualenv>=13.0.0; extra == \"test\"",
+        "wheel>=0.44.0; extra == \"test\"",
+        "pip>=19.1; extra == \"test\"",
+        "packaging>=24.2; extra == \"test\"",
+        "jaraco.envs>=2.2; extra == \"test\"",
+        "pytest-xdist>=3; extra == \"test\"",
+        "jaraco.path>=3.7.2; extra == \"test\"",
+        "build[virtualenv]>=1.0.3; extra == \"test\"",
+        "filelock>=3.4.0; extra == \"test\"",
+        "ini2toml[lite]>=0.14; extra == \"test\"",
+        "tomli-w>=1.0.0; extra == \"test\"",
+        "pytest-timeout; extra == \"test\"",
+        "pytest-perf; sys_platform != \"cygwin\" and extra == \"test\"",
+        "jaraco.develop>=7.21; (python_version >= \"3.9\" and sys_platform != \"cygwin\") and extra == \"test\"",
+        "pytest-home>=0.5; extra == \"test\"",
+        "pytest-subprocess; extra == \"test\"",
+        "pyproject-hooks!=1.1; extra == \"test\"",
+        "jaraco.test>=5.5; extra == \"test\"",
+        "sphinx>=3.5; extra == \"doc\"",
+        "jaraco.packaging>=9.3; extra == \"doc\"",
+        "rst.linker>=1.9; extra == \"doc\"",
+        "furo; extra == \"doc\"",
+        "sphinx-lint; extra == \"doc\"",
+        "jaraco.tidelift>=1.4; extra == \"doc\"",
+        "pygments-github-lexers==0.0.5; extra == \"doc\"",
+        "sphinx-favicon; extra == \"doc\"",
+        "sphinx-inline-tabs; extra == \"doc\"",
+        "sphinx-reredirects; extra == \"doc\"",
+        "sphinxcontrib-towncrier; extra == \"doc\"",
+        "sphinx-notfound-page<2,>=1; extra == \"doc\"",
+        "pyproject-hooks!=1.1; extra == \"doc\"",
+        "towncrier<24.7; extra == \"doc\"",
+        "packaging>=24.2; extra == \"core\"",
+        "more_itertools>=8.8; extra == \"core\"",
+        "jaraco.text>=3.7; extra == \"core\"",
+        "importlib_metadata>=6; python_version < \"3.10\" and extra == \"core\"",
+        "tomli>=2.0.1; python_version < \"3.11\" and extra == \"core\"",
+        "wheel>=0.43.0; extra == \"core\"",
+        "platformdirs>=4.2.2; extra == \"core\"",
+        "jaraco.functools>=4; extra == \"core\"",
+        "more_itertools; extra == \"core\"",
+        "pytest-checkdocs>=2.4; extra == \"check\"",
+        "pytest-ruff>=0.2.1; sys_platform != \"cygwin\" and extra == \"check\"",
+        "ruff>=0.8.0; sys_platform != \"cygwin\" and extra == \"check\"",
+        "pytest-cov; extra == \"cover\"",
+        "pytest-enabler>=2.2; extra == \"enabler\"",
+        "pytest-mypy; extra == \"type\"",
+        "mypy==1.14.*; extra == \"type\"",
+        "importlib_metadata>=7.0.2; python_version < \"3.10\" and extra == \"type\"",
+        "jaraco.develop>=7.21; sys_platform != \"cygwin\" and extra == \"type\""
+      ]
+    },
+    "typing-extensions": {
+      "version": "4.15.0",
+      "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+      "file": "typing_extensions-4.15.0-py3-none-any.whl",
+      "requirements": []
+    }
+  }
+}
