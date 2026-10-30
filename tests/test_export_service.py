@@ -1,6 +1,8 @@
+import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from PIL import Image, ImageChops
 
@@ -21,6 +23,19 @@ class ExportServiceTests(unittest.TestCase):
                     [CaptionRenderRequest("Caption")],
                     StyleSettings(font_size=18),
                 )
+
+    def test_flushes_through_a_writable_handle(self):
+        # Windows fsync (FlushFileBuffers) needs write access; a 0-byte write fails the same way on a read-only handle here.
+        real_fsync = os.fsync
+        def windows_fsync(descriptor):
+            os.write(descriptor, b"")
+            real_fsync(descriptor)
+        with tempfile.TemporaryDirectory() as directory, mock.patch("subtitle_app.export_service.os.fsync", windows_fsync):
+            root = Path(directory)
+            Image.new("RGB", (40, 30), "white").save(root / "source.png")
+            ExportService().export_image(root / "source.png", root / "result.png", [], StyleSettings())
+            ExportService().copy_original(root / "source.png", root / "copy.png")
+            self.assertTrue((root / "result.png").is_file() and (root / "copy.png").is_file())
 
     def test_export_writes_a_complete_rendered_file_and_keeps_source_bytes(self):
         with tempfile.TemporaryDirectory() as directory:

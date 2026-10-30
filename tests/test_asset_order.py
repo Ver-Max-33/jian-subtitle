@@ -7,12 +7,14 @@ import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from types import SimpleNamespace
+from unittest import mock
 from uuid import uuid4
 
 from PIL import Image
 
 from subtitle_app.asset_sorter import capture_time, file_times, order_assets, time_source, time_ties
 from subtitle_app.filename_classifier import FilenameKind
+from subtitle_app import import_service
 from subtitle_app.import_service import ImportService
 from subtitle_app.models import Asset, CaptionStatus
 from subtitle_app.project_store import ProjectStore
@@ -97,6 +99,17 @@ class ImportTimeTests(unittest.TestCase):
     def test_import_ignores_an_implausible_camera_clock(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "错误时钟.jpg"
+            write_image(path, time.time(), "1970:01:01 00:00:00")
+            self.assertIsNone(ImportService().import_paths([path]).assets[0].taken_at)
+
+    def test_an_unset_camera_clock_never_reaches_time_zone_conversion(self):
+        class WindowsDatetime(datetime):
+            def astimezone(self, tz=None):
+                if self.tzinfo is None and self.year < 1971:
+                    raise OSError(22, "Invalid argument")  # Windows localtime() before 1970
+                return super().astimezone(tz)
+        with tempfile.TemporaryDirectory() as directory, mock.patch.object(import_service, "datetime", WindowsDatetime):
+            path = Path(directory) / "没设时钟.jpg"
             write_image(path, time.time(), "1970:01:01 00:00:00")
             self.assertIsNone(ImportService().import_paths([path]).assets[0].taken_at)
 

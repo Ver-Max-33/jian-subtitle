@@ -89,7 +89,8 @@ class ExportService:
     def _commit_no_clobber(temporary: Path, output: Path) -> None:
         # Same-volume hard-link publication is atomic and fails if the name exists.
         # Never fall back to replace: unsupported filesystems must fail safely.
-        with temporary.open("rb") as stream:
+        # Windows can only flush a handle opened for writing (FlushFileBuffers); read-only fails with EBADF.
+        with temporary.open("r+b") as stream:
             os.fsync(stream.fileno())
         if os.name == "nt":
             # Windows rename fails if the target exists, including FAT/exFAT volumes.

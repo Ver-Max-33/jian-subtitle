@@ -295,11 +295,12 @@ class WebSafetyTests(unittest.TestCase):
             source = root / "source.png"; output = root / "output.png"
             Image.new("RGB", (50, 50), "white").save(source)
             import os
-            original_link = os.link
+            publish = "rename" if os.name == "nt" else "link"
+            original = getattr(os, publish)
             def race(src, dst):
                 Path(dst).write_bytes(b"other writer")
-                original_link(src, dst)
-            with patch("subtitle_app.export_service.os.link", side_effect=race):
+                original(src, dst)
+            with patch(f"subtitle_app.export_service.os.{publish}", side_effect=race):
                 with self.assertRaises(FileExistsError):
                     ExportService().export_image(source, output, [], StyleSettings())
             self.assertEqual(output.read_bytes(), b"other writer")

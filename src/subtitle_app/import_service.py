@@ -142,6 +142,10 @@ class ImportService:
                 moment = datetime.strptime(raw.strip()[:19], "%Y:%m:%d %H:%M:%S")
             except ValueError:
                 continue
+            # A camera without a set clock writes a date like 1970-01-01; skip implausible years before any time zone math,
+            # which Windows cannot do for times before 1970.
+            if not 1990 <= moment.year <= datetime.now().year + 1:
+                continue
             fraction = details.get(subsec)
             if isinstance(fraction, str) and fraction.strip().isdigit():
                 moment = moment.replace(microsecond=int((fraction.strip() + "000000")[:6]))
@@ -152,8 +156,7 @@ class ImportService:
                 moment = moment.replace(tzinfo=timezone(delta if match[1] == "+" else -delta))
             else:
                 moment = moment.astimezone()  # Cameras write local wall-clock time.
-            if 1990 <= moment.year <= datetime.now().year + 1:
-                return moment
+            return moment
         return None
 
     def _build_subtitles(

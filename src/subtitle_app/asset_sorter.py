@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from enum import StrEnum
 
 from .models import Asset
@@ -51,7 +51,16 @@ def file_times(stat, *, windows: bool | None = None) -> tuple[datetime, datetime
     created = getattr(stat, "st_birthtime", None)
     if created is None:
         created = stat.st_ctime if windows else stat.st_mtime
-    return datetime.fromtimestamp(created).astimezone(), datetime.fromtimestamp(stat.st_mtime).astimezone()
+    return local_time(created), local_time(stat.st_mtime)
+
+
+def local_time(timestamp: float) -> datetime:
+    """A file time in local time. Windows cannot convert times before 1970 to local time; those stay in UTC."""
+    moment = datetime(1970, 1, 1, tzinfo=timezone.utc) + timedelta(seconds=timestamp)
+    try:
+        return moment.astimezone()
+    except (OSError, OverflowError, ValueError):
+        return moment
 
 
 def capture_time(asset: Asset) -> datetime:
