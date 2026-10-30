@@ -380,3 +380,12 @@ class ConsoleEncodingTests(unittest.TestCase):
             self.assertEqual(0, desktop.main(["--smoke-test"]))
             stdout.flush()
             self.assertIn("检查通过", stdout.buffer.getvalue().decode("utf-8"))
+
+    def test_a_windowed_exe_gets_utf8_streams_before_pywebview_adds_cp1252_ones(self):
+        # pywebview replaces a missing stdout/stderr with open(os.devnull, "w"): the cp1252 locale on English Windows.
+        with patch.object(sys, "stdout", None), patch.object(sys, "stderr", None):
+            desktop.utf8_console()
+            for stream in (sys.stdout, sys.stderr):
+                self.assertEqual("utf-8", stream.encoding)
+                stream.write("简幕检查通过\n")
+                stream.close()

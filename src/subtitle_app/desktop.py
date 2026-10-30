@@ -45,9 +45,13 @@ def frontend_dir():
 
 
 def utf8_console():
-    """Print Chinese on any console. A frozen app ignores PYTHONUTF8; an English Windows console is cp1252."""
-    for stream in (sys.stdout, sys.stderr):
-        if stream is not None and hasattr(stream, "reconfigure"):
+    """Chinese text on stdout or stderr must never crash the app. A frozen app ignores PYTHONUTF8 and an English
+    Windows console is cp1252; a windowed EXE has no streams, and pywebview would fill them with a cp1252 devnull."""
+    for name in ("stdout", "stderr"):
+        stream = getattr(sys, name)
+        if stream is None:
+            setattr(sys, name, open(os.devnull, "w", encoding="utf-8"))
+        elif hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8", errors="replace")
 
 
