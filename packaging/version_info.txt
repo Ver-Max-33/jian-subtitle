@@ -1,7 +1,7 @@
 VSVersionInfo(
   ffi=FixedFileInfo(
-    filevers=(0, 2, 0, 0),
-    prodvers=(0, 2, 0, 0),
+    filevers=(0, 2, 1, 0),
+    prodvers=(0, 2, 1, 0),
     mask=0x3f,
     flags=0x0,
     OS=0x40004,
@@ -16,11 +16,11 @@ VSVersionInfo(
         [
           StringStruct(u'CompanyName', u'Jian Subtitle'),
           StringStruct(u'FileDescription', u'简幕图片字幕编辑器'),
-          StringStruct(u'FileVersion', u'0.2.0'),
+          StringStruct(u'FileVersion', u'0.2.1'),
           StringStruct(u'InternalName', u'JianSubtitle'),
           StringStruct(u'OriginalFilename', u'JianSubtitle.exe'),
           StringStruct(u'ProductName', u'简幕'),
-          StringStruct(u'ProductVersion', u'0.2.0')
+          StringStruct(u'ProductVersion', u'0.2.1')
         ]
       )
     ]),
