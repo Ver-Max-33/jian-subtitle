@@ -150,7 +150,7 @@ def publish(tag: str, key_path: Path):
         raise SystemExit(f"GitHub 上的 {tag} 不是本地的 {commit[:12]}，已停止")
     if f'PUBLIC_KEY = "{read_public_key(ROOT)}"' not in _run("git", "-C", str(ROOT), "show", f"{tag}:src/subtitle_app/update_key.py"):
         raise SystemExit(f"{tag} 里的公钥与当前代码不同，已停止")
-    info = json.loads(_run("gh", "release", "view", tag, "--repo", REPOSITORY, "--json", "isDraft,body,url"))
+    info = json.loads(_run("gh", "release", "view", tag, "--repo", REPOSITORY, "--json", "isDraft,body"))
     if not info["isDraft"]:
         raise SystemExit(f"{tag} 已经发布过了")
     name = installer_name(version)
@@ -173,7 +173,7 @@ def publish(tag: str, key_path: Path):
         (folder / "update.json").write_bytes(manifest)
         _run("gh", "release", "upload", tag, str(folder / "update.json"), "--repo", REPOSITORY, "--clobber", capture=False)
     _run("gh", "release", "edit", tag, "--repo", REPOSITORY, "--draft=false", "--latest", capture=False)
-    print(f"已发布 {tag}：{info['url']}")
+    print(f"已发布 {tag}：https://github.com/{REPOSITORY}/releases/tag/{tag}")
 
 
 def main():
