@@ -132,6 +132,15 @@ def keygen(path: Path):
           "请把私钥文件和口令备份到密码管理器：丢了它，已安装的版本就再也收不到自动更新。")
 
 
+def _sign(openssl: str, key: Path, payload: Path, signature: Path, attempts: int = 3):
+    """OpenSSL asks for the passphrase itself; a typo should not mean downloading the installer again."""
+    for attempt in range(attempts):
+        print("输入私钥口令以签名：" if attempt == 0 else "口令不对，再输一次：")
+        if subprocess.run([openssl, "pkeyutl", "-sign", "-rawin", "-inkey", str(key), "-in", str(payload), "-out", str(signature)]).returncode == 0:
+            return
+    raise SystemExit(f"口令连续 {attempts} 次不对，已停止，草稿没有发布。")
+
+
 def publish(tag: str, key_path: Path):
     version = check(ROOT, tag)
     public_key = base64.b64decode(read_public_key(ROOT))
@@ -155,8 +164,7 @@ def publish(tag: str, key_path: Path):
         data = installer.read_bytes()
         payload = make_payload(version, len(data), hashlib.sha256(data).hexdigest(), plain_notes(info["body"]))
         (folder / "payload").write_bytes(payload.encode("utf-8"))
-        print("输入私钥口令以签名：")
-        _run(_openssl(), "pkeyutl", "-sign", "-rawin", "-inkey", str(key_path), "-in", str(folder / "payload"), "-out", str(folder / "signature"), capture=False)
+        _sign(_openssl(), key_path, folder / "payload", folder / "signature")
         manifest = envelope(payload, (folder / "signature").read_bytes())
         try:
             read_manifest(manifest, public_key)  # exactly what installed copies will check

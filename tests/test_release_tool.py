@@ -4,6 +4,8 @@ import shutil
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest import mock
 
 from subtitle_app import __version__
 from subtitle_app.updater import NOTES_LIMIT
@@ -64,3 +66,11 @@ class ReleaseToolTest(unittest.TestCase):
         self.assertEqual(release.plain_notes("## 新功能\n可以检查更新"), "新功能\n可以检查更新")
         self.assertEqual(release.plain_notes("**Full Changelog**: https://example.com"), "")
         self.assertEqual(len(release.plain_notes("x" * 9000)), NOTES_LIMIT)
+
+    def test_signing_lets_a_mistyped_passphrase_be_entered_again(self):
+        results = iter([1, 1, 0])
+        with mock.patch.object(release.subprocess, "run", side_effect=lambda *a, **k: SimpleNamespace(returncode=next(results))) as run:
+            release._sign("openssl", Path("key.pem"), Path("payload"), Path("signature"))
+        self.assertEqual(3, run.call_count)
+        with mock.patch.object(release.subprocess, "run", return_value=SimpleNamespace(returncode=1)), self.assertRaisesRegex(SystemExit, "没有发布"):
+            release._sign("openssl", Path("key.pem"), Path("payload"), Path("signature"))
