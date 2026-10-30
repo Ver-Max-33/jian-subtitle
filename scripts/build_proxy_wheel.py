@@ -12,6 +12,15 @@ import zipfile
 from pathlib import Path
 
 
+def write_wheel(destination: Path, files: dict):
+    with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_DEFLATED) as wheel:
+        for name, data in files.items():
+            entry = zipfile.ZipInfo(name, date_time=(2014, 1, 1, 0, 0, 0))
+            # zipfile records the host OS (Windows 0, Unix 3); fix it so the bytes match the hash in requirements-win.lock.
+            entry.create_system = 3
+            wheel.writestr(entry, data)
+
+
 def main():
     archive = Path(sys.argv[1])
     output = Path(sys.argv[2])
@@ -32,10 +41,7 @@ def main():
     files[f"{info}/RECORD"] = ("\n".join(records) + "\n").encode()
     output.mkdir(parents=True, exist_ok=True)
     destination = output / "proxy_tools-0.1.0-py3-none-any.whl"
-    with zipfile.ZipFile(destination, "w", compression=zipfile.ZIP_DEFLATED) as wheel:
-        for name, data in files.items():
-            entry = zipfile.ZipInfo(name, date_time=(2014, 1, 1, 0, 0, 0))
-            wheel.writestr(entry, data)
+    write_wheel(destination, files)
     print(destination)
     print(hashlib.sha256(destination.read_bytes()).hexdigest())
 
