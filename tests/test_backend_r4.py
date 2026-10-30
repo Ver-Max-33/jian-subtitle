@@ -370,3 +370,13 @@ class WindowThemeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ConsoleEncodingTests(unittest.TestCase):
+    def test_smoke_test_prints_on_an_english_windows_console(self):
+        # A started EXE inherits the runner's cp1252 pipe; frozen apps ignore PYTHONUTF8, and Chinese cannot be encoded.
+        stdout = io.TextIOWrapper(io.BytesIO(), encoding="cp1252")
+        with patch.object(sys, "stdout", stdout), patch.object(sys, "stderr", None):
+            self.assertEqual(0, desktop.main(["--smoke-test"]))
+            stdout.flush()
+            self.assertIn("检查通过", stdout.buffer.getvalue().decode("utf-8"))

@@ -44,7 +44,15 @@ def frontend_dir():
     return Path(__file__).resolve().parents[2] / "frontend/dist"
 
 
+def utf8_console():
+    """Print Chinese on any console. A frozen app ignores PYTHONUTF8; an English Windows console is cp1252."""
+    for stream in (sys.stdout, sys.stderr):
+        if stream is not None and hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
+
 def main(argv=None):
+    utf8_console()
     parser = argparse.ArgumentParser()
     parser.add_argument("--browser", action="store_true", help="受保护的浏览器预览（无原生文件对话框）")
     parser.add_argument("--data-dir", type=Path, default=default_data_dir())
