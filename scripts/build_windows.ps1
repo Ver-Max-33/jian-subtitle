@@ -69,6 +69,16 @@ try {
             Start-Sleep -Milliseconds 500
         }
         if (-not $Reopened) { throw "自动更新安装后没有重新打开简幕。" }
+        # A picture of the reopened window, saved next to the installer (CI uploads it): what 简幕 looks like on real Windows.
+        Start-Sleep -Seconds 10
+        try {
+            Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+            $Bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+            $Bitmap = New-Object System.Drawing.Bitmap $Bounds.Width, $Bounds.Height
+            [System.Drawing.Graphics]::FromImage($Bitmap).CopyFromScreen($Bounds.Location, [System.Drawing.Point]::Empty, $Bounds.Size)
+            $Bitmap.Save((Join-Path $OutputRoot "screenshot-reopened.png"), [System.Drawing.Imaging.ImageFormat]::Png)
+        }
+        catch { Write-Warning "截图失败：$_" }
         $Reopened | Stop-Process -Force
         Start-Sleep -Seconds 2
         $Process = Start-Process -FilePath (Join-Path $TestRoot "unins000.exe") -ArgumentList @("/VERYSILENT", "/NORESTART") -Wait -PassThru
