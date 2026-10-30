@@ -5,6 +5,8 @@
     [string]$Python = ""
 )
 $ErrorActionPreference = "Stop"
+# Scripts print Chinese; an English-locale Windows console (cp1252) cannot encode it.
+$env:PYTHONUTF8 = "1"
 $ProjectRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 & (Join-Path $ProjectRoot "scripts\bootstrap_windows.ps1") -PythonExecutable $Python
 if ($LASTEXITCODE -ne 0) { throw "环境准备失败。" }

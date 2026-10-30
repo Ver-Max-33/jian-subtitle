@@ -29,6 +29,8 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: read
+    env:
+      PYTHONUTF8: "1"  # Python prints Chinese; the runner's console code page is cp1252
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
