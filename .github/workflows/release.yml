@@ -46,10 +46,24 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: python scripts/release.py check "$env:TAG"
 
-      - name: Build installer (tests, PyInstaller, Inno Setup)
+      # The installer refuses to run without WebView2, so the install test needs it on the runner.
+      # Only Microsoft's own signed bootstrapper is run; the installer we ship does not include it.
+      - name: Make sure WebView2 Runtime is installed
+        run: |
+          $Key = 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}'
+          $Version = (Get-ItemProperty -Path $Key -ErrorAction SilentlyContinue).pv
+          if ($Version -and $Version -ne '0.0.0.0') { Write-Host "WebView2 Runtime $Version"; exit 0 }
+          $Setup = Join-Path $env:RUNNER_TEMP 'MicrosoftEdgeWebview2Setup.exe'
+          Invoke-WebRequest -Uri 'https://go.microsoft.com/fwlink/p/?LinkId=2124703' -OutFile $Setup
+          $Signature = Get-AuthenticodeSignature -LiteralPath $Setup
+          if ($Signature.Status -ne 'Valid' -or $Signature.SignerCertificate.Subject -notmatch 'O=Microsoft Corporation') { throw 'WebView2 bootstrapper is not signed by Microsoft' }
+          $Process = Start-Process -FilePath $Setup -ArgumentList '/silent', '/install' -Wait -PassThru
+          if ($Process.ExitCode -ne 0) { throw "WebView2 install failed with $($Process.ExitCode)" }
+
+      - name: Build and test installer (tests, PyInstaller, Inno Setup, install, update, uninstall)
         env:
           PYTHON_EXE: ${{ steps.python.outputs.python-path }}
-        run: ./scripts/build_windows.ps1 -Python "$env:PYTHON_EXE"
+        run: ./scripts/build_windows.ps1 -Python "$env:PYTHON_EXE" -InstallTest
 
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:

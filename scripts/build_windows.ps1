@@ -54,6 +54,21 @@ try {
         if ($Process.ExitCode -ne 0) { throw "安装测试失败。" }
         $Smoke = Start-Process -FilePath (Join-Path $TestRoot "JianSubtitle.exe") -ArgumentList "--smoke-test" -Wait -PassThru
         if ($Smoke.ExitCode -ne 0) { throw "安装后的 EXE 检查失败。" }
+        # An in-app update runs this installer over the installed copy (src/subtitle_app/updater.py); it must reopen 简幕.
+        # No -Wait here: it would also wait for the reopened app, which never exits by itself.
+        $Process = Start-Process -FilePath $Installer -ArgumentList @("/SILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/RELAUNCH=1") -PassThru
+        $null = $Process.Handle
+        $Process.WaitForExit()
+        if ($Process.ExitCode -ne 0) { throw "覆盖安装（自动更新）测试失败。" }
+        $Reopened = $null
+        foreach ($Attempt in 1..30) {
+            $Reopened = Get-Process -Name JianSubtitle -ErrorAction SilentlyContinue | Where-Object { $_.Path -and $_.Path.StartsWith($TestRoot) }
+            if ($Reopened) { break }
+            Start-Sleep -Milliseconds 500
+        }
+        if (-not $Reopened) { throw "自动更新安装后没有重新打开简幕。" }
+        $Reopened | Stop-Process -Force
+        Start-Sleep -Seconds 2
         $Process = Start-Process -FilePath (Join-Path $TestRoot "unins000.exe") -ArgumentList @("/VERYSILENT", "/NORESTART") -Wait -PassThru
         if ($Process.ExitCode -ne 0) { throw "卸载测试失败，请保留测试目录诊断。" }
     }
