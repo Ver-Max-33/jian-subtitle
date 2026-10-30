@@ -8,6 +8,33 @@ $ErrorActionPreference = "Stop"
 # Scripts print Chinese; an English-locale Windows console (cp1252) cannot encode it.
 $env:PYTHONUTF8 = "1"
 $ProjectRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
+
+function Save-Screenshot([string]$Path) {
+    try {
+        Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+        $Bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+        $Bitmap = New-Object System.Drawing.Bitmap $Bounds.Width, $Bounds.Height
+        [System.Drawing.Graphics]::FromImage($Bitmap).CopyFromScreen($Bounds.Location, [System.Drawing.Point]::Empty, $Bounds.Size)
+        $Bitmap.Save($Path, [System.Drawing.Imaging.ImageFormat]::Png)
+    }
+    catch { Write-Warning "截图失败：$_" }
+}
+
+# A windowed EXE that fails shows a dialog and waits for a click: never wait for it forever, and keep a screenshot.
+function Test-Smoke([string]$Executable, [string]$Screenshot) {
+    $Process = Start-Process -FilePath $Executable -ArgumentList "--smoke-test" -PassThru
+    $null = $Process.Handle
+    if (-not $Process.WaitForExit(180000)) {
+        Save-Screenshot $Screenshot
+        $Process | Stop-Process -Force
+        throw "EXE 烟雾检查 3 分钟没有结束，截图：$Screenshot"
+    }
+    if ($Process.ExitCode -ne 0) {
+        Save-Screenshot $Screenshot
+        throw "EXE 烟雾检查失败，退出码 $($Process.ExitCode)"
+    }
+}
+
 & (Join-Path $ProjectRoot "scripts\bootstrap_windows.ps1") -PythonExecutable $Python
 if ($LASTEXITCODE -ne 0) { throw "环境准备失败。" }
 Push-Location $ProjectRoot
@@ -26,8 +53,7 @@ try {
     & .\.venv-win\Scripts\python.exe -m PyInstaller --noconfirm --distpath $OutputRoot --workpath $WorkRoot packaging\subtitle_app.spec
     if ($LASTEXITCODE -ne 0) { throw "PyInstaller 构建失败。" }
     $Executable = if ($Mode -eq "OneFile") { Join-Path $OutputRoot "JianSubtitle.exe" } else { Join-Path $OutputRoot "JianSubtitle\JianSubtitle.exe" }
-    $Smoke = Start-Process -FilePath $Executable -ArgumentList "--smoke-test" -Wait -PassThru
-    if ($Smoke.ExitCode -ne 0) { throw "EXE 烟雾检查失败。" }
+    Test-Smoke $Executable (Join-Path $OutputRoot "screenshot-smoke.png")
     if ($Mode -eq "OneFile") {
         Get-FileHash $Executable -Algorithm SHA256
         Write-Host "单文件 EXE：$Executable（目标机需要 WebView2 Runtime）"
@@ -54,8 +80,7 @@ try {
         $TestRoot = Join-Path $env:TEMP "JianSubtitle-Test-$BuildId"
         $Process = Start-Process -FilePath $Installer -ArgumentList @("/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", ('/DIR="' + $TestRoot + '"')) -Wait -PassThru
         if ($Process.ExitCode -ne 0) { throw "安装测试失败。" }
-        $Smoke = Start-Process -FilePath (Join-Path $TestRoot "JianSubtitle.exe") -ArgumentList "--smoke-test" -Wait -PassThru
-        if ($Smoke.ExitCode -ne 0) { throw "安装后的 EXE 检查失败。" }
+        Test-Smoke (Join-Path $TestRoot "JianSubtitle.exe") (Join-Path $OutputRoot "screenshot-installed-smoke.png")
         # An in-app update runs this installer over the installed copy (src/subtitle_app/updater.py); it must reopen 简幕.
         # No -Wait here: it would also wait for the reopened app, which never exits by itself.
         $Process = Start-Process -FilePath $Installer -ArgumentList @("/SILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/RELAUNCH=1") -PassThru
@@ -71,14 +96,7 @@ try {
         if (-not $Reopened) { throw "自动更新安装后没有重新打开简幕。" }
         # A picture of the reopened window, saved next to the installer (CI uploads it): what 简幕 looks like on real Windows.
         Start-Sleep -Seconds 10
-        try {
-            Add-Type -AssemblyName System.Windows.Forms, System.Drawing
-            $Bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
-            $Bitmap = New-Object System.Drawing.Bitmap $Bounds.Width, $Bounds.Height
-            [System.Drawing.Graphics]::FromImage($Bitmap).CopyFromScreen($Bounds.Location, [System.Drawing.Point]::Empty, $Bounds.Size)
-            $Bitmap.Save((Join-Path $OutputRoot "screenshot-reopened.png"), [System.Drawing.Imaging.ImageFormat]::Png)
-        }
-        catch { Write-Warning "截图失败：$_" }
+        Save-Screenshot (Join-Path $OutputRoot "screenshot-reopened.png")
         $Reopened | Stop-Process -Force
         Start-Sleep -Seconds 2
         $Process = Start-Process -FilePath (Join-Path $TestRoot "unins000.exe") -ArgumentList @("/VERYSILENT", "/NORESTART") -Wait -PassThru
