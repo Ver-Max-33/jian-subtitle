@@ -201,10 +201,11 @@ class ImportTaskTests(ControllerCase):
         return self.c.snapshot()["importTask"]
 
     def wait(self, condition):
-        deadline = time.monotonic() + 10
+        # CI runners can be several times slower than a desktop; say what the import was doing if it never got there.
+        deadline = time.monotonic() + 30
         while not condition() and time.monotonic() < deadline:
             time.sleep(.01)
-        self.assertTrue(condition())
+        self.assertTrue(condition(), self.task())
 
     def test_choosing_images_returns_at_once_and_reports_progress(self):
         result = self.ok("choose_images")

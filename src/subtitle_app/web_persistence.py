@@ -9,6 +9,8 @@ import secrets
 from pathlib import Path
 from uuid import uuid4
 
+from .files import replace_file
+
 
 class TrustedStore:
     def __init__(self, root: Path):
@@ -35,7 +37,7 @@ class TrustedStore:
             with temporary.open("w", encoding="utf-8") as stream:
                 json.dump({"payload": encoded, "signature": signature}, stream, ensure_ascii=False)
                 stream.flush(); os.fsync(stream.fileno())
-            os.replace(temporary, destination)
+            replace_file(temporary, destination)
         finally:
             temporary.unlink(missing_ok=True)
 

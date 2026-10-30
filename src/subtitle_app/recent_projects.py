@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import json
-import os
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
+
+from .files import replace_file
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,11 +59,11 @@ class RecentProjectStore:
         temporary.write_text(
             json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
         )
-        os.replace(temporary, self._index_path)
+        replace_file(temporary, self._index_path)
 
     def remove(self, path: str) -> None:
         entries = [entry for entry in self.list() if str(entry.path) != path]
         payload = [{"path": str(entry.path), "name": entry.name, "asset_count": entry.asset_count, "updated_at": entry.updated_at.isoformat(), "page": entry.page} for entry in entries]
         temporary = self._index_path.with_name(f".{self._index_path.name}.tmp")
         temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-        os.replace(temporary, self._index_path)
+        replace_file(temporary, self._index_path)

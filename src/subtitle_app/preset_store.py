@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 from uuid import uuid4
 
 from .models import StyleSettings
+from .files import replace_file
 
 
 class PresetStore:
@@ -100,6 +100,6 @@ class PresetStore:
             temporary.write_text(
                 json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
             )
-            os.replace(temporary, self._path)
+            replace_file(temporary, self._path)
         finally:
             temporary.unlink(missing_ok=True)

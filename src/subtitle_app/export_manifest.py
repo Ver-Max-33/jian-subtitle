@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import json
-import os
 from pathlib import Path
 from uuid import uuid4
 
+from .files import replace_file
 from .models import (
     CaptionRenderRequest,
     ExportJobItem,
@@ -36,7 +36,7 @@ class ExportManifestStore:
             temporary.write_text(
                 json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
             )
-            os.replace(temporary, target)
+            replace_file(temporary, target)
         finally:
             temporary.unlink(missing_ok=True)
 

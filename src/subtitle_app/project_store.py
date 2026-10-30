@@ -9,6 +9,7 @@ from uuid import uuid4
 
 from .asset_sorter import ORDER_MODES
 from .filename_classifier import FilenameKind
+from .files import replace_file
 from .models import (
     Asset,
     CaptionStatus,
@@ -38,7 +39,7 @@ class ProjectStore:
                 os.fsync(file.fileno())
             if destination.exists():
                 shutil.copy2(destination, backup)
-            os.replace(temporary, destination)
+            replace_file(temporary, destination)
         finally:
             temporary.unlink(missing_ok=True)
 
