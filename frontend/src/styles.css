@@ -278,7 +278,6 @@
   .dot-row, .dot-anchor { position: relative; }
   .dot-row > .override-dot, .dot-anchor > .override-dot { position: absolute; left: -9px; top: 50%; translate: 0 -50%; }
   .override-popover { width: auto; max-width: 260px; flex-direction: row; align-items: center; gap: 10px; padding: 8px 10px; font-size: 12px; }
-  .field-hint { color: var(--text-3); flex-shrink: 0; margin-left: 4px; }
   .menu-head-block { display: flex; flex-direction: column; gap: 2px; padding: 6px 8px 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line); font-size: 11px; color: var(--text-3); }
   .menu-head-row strong { color: var(--accent-text); font-weight: 600; }
   .unified-summary { color: var(--text); }
@@ -331,7 +330,8 @@
   .canvas-area.zoomed { cursor: grab; }
   .canvas-area.panning, .canvas-area.panning .caption-box { cursor: grabbing; }
   .canvas-area.placing .image-stage { cursor: crosshair; }
-  .canvas-placeholder { max-width: 100%; max-height: 100%; object-fit: contain; opacity: .85; }
+  /* The stand-in is a small cached thumbnail: fill the same box the fitted image will take, or it shows at thumbnail size. */
+  .canvas-placeholder { width: 100%; height: 100%; object-fit: contain; opacity: .85; }
   .preview-loading { color: var(--text-3); }
   .image-stage { position: relative; width: 100%; max-width: 100%; max-height: 100%; flex: 0 1 auto; outline: 1px solid transparent; outline-offset: 0; transition: outline-color var(--dur-hover); }
   .image-stage.selected { outline-color: var(--selection); }
@@ -418,6 +418,7 @@
   .tool-group.tools::before { content: ''; position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 8px; background: var(--accent); transform: translateX(calc(var(--tool) * 34px)); transition: transform 250ms var(--spring); }
   .tool-group.tools .icon-button.active { background: transparent; position: relative; color: #FFFFFF; transition: color 80ms; }
   .tool-group.tools .icon-button:not(.active) { position: relative; }
+  .tool-group.tools.off::before { opacity: 0; }
   .tool-divider { width: 1px; height: 20px; margin: 0 4px; background: var(--line); }
   .tool-count { min-width: 52px; text-align: center; font-weight: 500; }
   .toasts { position: absolute; left: 50%; bottom: 72px; transform: translateX(-50%); z-index: 25; pointer-events: none; }
@@ -533,7 +534,8 @@
 
   /* Export tab */
   .check-list { display: flex; flex-direction: column; gap: 2px; }
-  .check-row { display: flex; align-items: center; gap: 8px; min-height: 32px; }
+  .check-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 32px; }
+  .check-fix { flex-basis: 100%; padding-left: 22px; } /* under the message: 14 px icon + 8 px gap */
   .check-row > svg { width: 14px; height: 14px; }
   .check-row > span:not(.checkbox) { flex: 1; min-width: 0; }
   .check-row.muted { color: var(--text-2); }

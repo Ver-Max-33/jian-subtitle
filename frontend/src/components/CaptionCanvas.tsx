@@ -95,7 +95,8 @@ export function CaptionCanvas({ frame, asset, captionId, styles, positions, zoom
     anchor.current = { fx: (x - box.left) / box.width, fy: (y - box.top) / box.height, cx: x - a.left, cy: y - a.top };
     if (clientX === undefined) lastView = { fx: anchor.current.fx, fy: anchor.current.fy };
   };
-  useEffect(() => {
+  // Measured before the first paint: an image that opens at 0 × 0 flashes blank for a frame.
+  useLayoutEffect(() => {
     const target = canvas.current;
     if (!target) return;
     const update = () => {

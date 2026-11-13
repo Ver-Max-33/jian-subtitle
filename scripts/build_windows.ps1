@@ -97,6 +97,12 @@ try {
         # A picture of the reopened window, saved next to the installer (CI uploads it): what 简幕 looks like on real Windows.
         Start-Sleep -Seconds 10
         Save-Screenshot (Join-Path $OutputRoot "screenshot-reopened.png")
+        # Only one copy runs (src/subtitle_app/desktop.py): starting 简幕 again brings this window forward and leaves.
+        $Second = Start-Process -FilePath (Join-Path $TestRoot "JianSubtitle.exe") -PassThru
+        $null = $Second.Handle
+        if (-not $Second.WaitForExit(60000)) { $Second | Stop-Process -Force; throw "第二次打开简幕没有退出：会同时开着两个窗口。" }
+        if ($Second.ExitCode -ne 0) { throw "第二次打开简幕时没找到已打开的窗口（退出码 $($Second.ExitCode)）。" }
+        if (-not (Get-Process -Id ($Reopened | Select-Object -First 1).Id -ErrorAction SilentlyContinue)) { throw "第二次打开简幕时，原来的窗口被关掉了。" }
         $Reopened | Stop-Process -Force
         Start-Sleep -Seconds 2
         $Process = Start-Process -FilePath (Join-Path $TestRoot "unins000.exe") -ArgumentList @("/VERYSILENT", "/NORESTART") -Wait -PassThru

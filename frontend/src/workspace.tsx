@@ -49,7 +49,8 @@ function useWorkspaceState() {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [dialog, setDialog] = useState<DialogState>(null);
   const [drafts, setDrafts] = useState<Drafts>({ assetId: '', styles: {}, positions: {} });
-  // 「应用到」 (spec 4.1): back to 「全部图片」 for every other image or caption; the row last written to the unified style.
+  // 「应用到」 (spec 4.1) stays as chosen across images and captions (2026-11-13; it used to jump back to 「全部图片」,
+  // so a change meant for one caption hit every image). A new project starts at 「全部图片」.
   const [scope, setScope] = useState<Scope>('all');
   const [lastUnified, setLastUnified] = useState<Row | null>(null);
   // The caption being typed on the picture, and where it was double-clicked (spec 4.3).
@@ -94,7 +95,8 @@ function useWorkspaceState() {
   }, [project?.id]);
   useEffect(() => { if (captionId && asset && !asset.captions.some(c => c.id === captionId)) setCaptionId(asset.captions[0]?.id ?? null); }, [asset?.captions.length, captionId]);
   useEffect(() => { setRawView(false); setTool('select'); setLiveText(undefined); }, [activeId]);
-  useEffect(() => { setScope('all'); setLastUnified(null); }, [activeId, captionId]);
+  useEffect(() => { setLastUnified(null); }, [activeId, captionId]);
+  useEffect(() => { setScope('all'); }, [project?.id]);
   useEffect(() => { if (editingId && !asset?.captions.some(c => c.id === editingId)) setEditingId(null); }, [asset, editingId]);
 
   const choose = useCallback((id: string, { caption: wanted }: { caption?: string | null } = {}) => act(async () => {
@@ -107,9 +109,13 @@ function useWorkspaceState() {
   const step = useCallback((delta: number) => {
     const list = visible.length ? visible : assets;
     const index = list.findIndex(a => a.id === activeId);
-    const next = list[Math.min(list.length - 1, Math.max(0, (index < 0 ? 0 : index) + delta))];
+    // From an image the list no longer shows: the first one forward, the last one back.
+    const next = index < 0 ? list.at(delta > 0 ? 0 : -1) : list[Math.min(list.length - 1, Math.max(0, index + delta))];
     if (next && next.id !== activeId) choose(next.id);
   }, [visible, assets, activeId, choose]);
+  // A filter or search that hides the current image opens the first one it shows (it used to stay on the hidden one:
+  // 「0 / 11」, no row highlighted). An edit that moves the image out of the filter keeps it, mid-edit.
+  useEffect(() => { if (visible.length && !visible.some(a => a.id === activeId)) choose(visible[0].id); }, [filter, query, issueIds]);
 
   /** 「确认并下一张」: confirm every caption here, then the next unresolved image in the order on screen. */
   const confirmAndNext = useCallback((target?: Asset) => act(async () => {

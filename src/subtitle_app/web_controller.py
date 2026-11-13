@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import copy
+import errno
 import hashlib
 import io
 import json
+import os
+import re
 import threading
 import zlib
 from collections import OrderedDict
@@ -18,7 +21,7 @@ from .export_planner import ExportPlanner
 from .export_service import ExportService
 from .import_service import ImportService
 from .layout_service import LayoutService
-from .models import CaptionStatus, ExportOptions, JobItemStatus, NamingMode, Project, StyleSettings, SubtitleItem, SubtitleSource
+from .models import CaptionStatus, ExportOptions, JobItemStatus, NamingMode, Project, StyleSettings, SubtitleItem, SubtitleSource, stacked_position
 from .output_preflight import OutputPreflight
 from .preset_store import PresetStore
 from .project_store import ProjectStore
@@ -37,6 +40,38 @@ from .style_model import APPEARANCE_KEYS, POSITION_KEYS, REFERENCE_EDGE, SCALED_
 SCOPES = ("all", "caption")
 # Update commands never touch the project, so they work during tasks and ignore its revision.
 UPDATE_ACTIONS = {"update_check", "update_download", "update_auto", "open_releases"}
+# Why an image is left out of an export. One broken file must not hold back the other 1000 (2026-11-13): such images
+# stay out, the rest export, and the check shows one card per reason.
+LEFT_OUT = {
+    "unreadable": "{} 张图片无法读取，不会导出",
+    "missing": "{} 张图片找不到源文件，不会导出",
+    "permission": "{} 张图片需要重新定位素材文件夹，不会导出",
+    "font": "{} 张图片的字体不可用，不会导出",
+    "style": "{} 张图片的字幕样式无效，不会导出",
+    "glyphs": "{} 张图片的字体缺少字形，不会导出",
+    "overflow": "{} 张图片的字幕超出画面，不会导出",
+    "name": "{} 张图片的文件名在 Windows 上不可用，不会导出",
+    "long": "{} 张图片的文件名太长，不会导出",
+}
+
+
+def plain_error(error: Exception, source: Path) -> str:
+    """Why one file failed, for people: no English and no paths (the job list shows it as is)."""
+    is_source = getattr(error, "filename", None) is not None and Path(error.filename) == source
+    if isinstance(error, CommandError):
+        return str(error)
+    if isinstance(error, FileExistsError):
+        return "保存位置已有同名文件"
+    if isinstance(error, FileNotFoundError):
+        return "找不到源图片" if is_source else "找不到保存位置"
+    if isinstance(error, PermissionError):
+        return "没有权限读取源图片" if is_source else "没有权限写入保存位置"
+    if isinstance(error, Image.UnidentifiedImageError):
+        return "无法读取这张图片，文件可能已损坏或格式不受支持"
+    if isinstance(error, OSError):
+        return {errno.ENOSPC: "磁盘空间不足", errno.ENAMETOOLONG: "文件名太长", errno.EROFS: "保存位置只能读取"}.get(error.errno, "读写文件失败")
+    # The app's own messages are Chinese already; Pillow's are not.
+    return str(error) if re.search(r"[一-鿿]", str(error)) else "导出这张图片时出错"
 
 
 def fingerprint(path: Path) -> str:
@@ -1003,10 +1038,41 @@ class WebController:
             raise CommandError("SOURCE_MISSING", "源文件不存在，请重新定位", [asset.id])
         return asset.source_path.resolve()
 
+    def _export_check(self, asset, default_style, show_speaker, renderer):
+        """Why this image would be left out of an export (a LEFT_OUT key, or None), whether its captions overlap, and
+        whether it is an animation (only its first frame is exported)."""
+        if asset.caption_status is CaptionStatus.UNREADABLE:
+            return "unreadable", False, False
+        try:
+            source = self._source(asset)
+            # An unavailable font is never opened: its path comes from the project file.
+            for caption in asset.subtitles:
+                validate_stored_style(self._style(caption))
+        except CommandError as error:
+            return {"SOURCE_MISSING": "missing", "SOURCE_PERMISSION": "permission", "FONT_MISSING": "font"}.get(error.code, "style"), False, False
+        # What is drawn, speaker prefix included.
+        requests = ExportPlanner.caption_requests(asset, default_style, show_speaker)
+        try:
+            if any(r.style.font_path and {ord(c) for c in r.text if not c.isspace()} - font_codepoints(r.style.font_path, r.style.font_index) for r in requests):
+                return "glyphs", False, False
+        except OSError:
+            return "font", False, False
+        try:
+            with Image.open(source) as opened:
+                size = opened.size[::-1] if opened.getexif().get(274) in {5, 6, 7, 8} else opened.size
+                animated = getattr(opened, "n_frames", 1) > 1
+            geometry = renderer.measure(size, requests, default_style)
+        except (OSError, ValueError):
+            return "unreadable", False, False
+        if any(g["overflow"] for g in geometry):
+            return "overflow", False, False
+        bounds = [g["bounds"] for g in geometry]
+        return None, any(min(a[2], b[2]) > max(a[0], b[0]) and min(a[3], b[3]) > max(a[1], b[1]) for i, a in enumerate(bounds) for b in bounds[i + 1:]), animated
+
     @staticmethod
     def _position(asset, caption):
-        """Where a caption sits: placed by hand, by smart layout, or stacked up from the bottom by default."""
-        return caption.manual_position_ratio or caption.auto_position_ratio or (0.5, max(0.12, 0.86 - asset.subtitles.index(caption) * 0.12))
+        """Where a caption sits: placed by hand, by smart layout, or stacked in reading order by default."""
+        return caption.manual_position_ratio or caption.auto_position_ratio or stacked_position(asset.subtitles.index(caption), len(asset.subtitles))
 
     def _style(self, caption, project=None):
         return {**StyleSettings().to_mapping(), **(project or self._require_project()).default_style, **caption.style_overrides}
@@ -1079,27 +1145,31 @@ class WebController:
         source_stamp = (str(path), stat.st_mtime_ns, stat.st_ctime_ns, stat.st_size)
         source_key = hashlib.sha256(repr((*source_stamp, size)).encode()).hexdigest()
         dimensions = None
-        if editable:
-            with self.preview_source_lock:
-                source = self.preview_sources.get(source_stamp)
-                if source is None:
-                    with Image.open(path) as opened:
-                        source = ImageOps.exif_transpose(opened).convert("RGBA")
-                    if source.width * source.height * 4 <= 128 * 1024 * 1024:
-                        self.preview_sources[source_stamp] = source
-                if source_stamp in self.preview_sources:
-                    self.preview_sources.move_to_end(source_stamp)
-                while len(self.preview_sources) > 2 or sum(im.width * im.height * 4 for im in self.preview_sources.values()) > 128 * 1024 * 1024:
-                    self.preview_sources.popitem(last=False)
-        else:
-            with Image.open(path) as opened:
-                if raw:
-                    dimensions = opened.size
-                    if opened.getexif().get(274) in {5, 6, 7, 8}:
-                        dimensions = dimensions[::-1]
-                    opened.draft("RGB", (size, size))
-                    opened.thumbnail((size, size), Image.Resampling.LANCZOS)
-                source = ImageOps.exif_transpose(opened).convert("RGBA")
+        try:
+            if editable:
+                with self.preview_source_lock:
+                    source = self.preview_sources.get(source_stamp)
+                    if source is None:
+                        with Image.open(path) as opened:
+                            source = ImageOps.exif_transpose(opened).convert("RGBA")
+                        if source.width * source.height * 4 <= 128 * 1024 * 1024:
+                            self.preview_sources[source_stamp] = source
+                    if source_stamp in self.preview_sources:
+                        self.preview_sources.move_to_end(source_stamp)
+                    while len(self.preview_sources) > 2 or sum(im.width * im.height * 4 for im in self.preview_sources.values()) > 128 * 1024 * 1024:
+                        self.preview_sources.popitem(last=False)
+            else:
+                with Image.open(path) as opened:
+                    if raw:
+                        dimensions = opened.size
+                        if opened.getexif().get(274) in {5, 6, 7, 8}:
+                            dimensions = dimensions[::-1]
+                        opened.draft("RGB", (size, size))
+                        opened.thumbnail((size, size), Image.Resampling.LANCZOS)
+                    source = ImageOps.exif_transpose(opened).convert("RGBA")
+        except (OSError, ValueError, SyntaxError, Image.DecompressionBombError) as error:
+            # Pillow's own text is English and carries the full path.
+            raise CommandError("SOURCE_UNREADABLE", "无法读取这张图片，文件可能已损坏或格式不受支持", [asset.id]) from error
         dimensions = dimensions or source.size
         overlays, layers = [], []
         media = {}
@@ -1148,66 +1218,75 @@ class WebController:
             raise CommandError("OUTPUT_REQUIRED", "请选择输出文件夹")
         output = output.resolve()
         mode = NamingMode(choice(p.get("naming", "original"), ("original", "sequence"), "命名方式"))
-        options = ExportOptions(output, naming_mode=mode, start_number=number(p.get("start", 1), 0, 999999, "起始序号", True), digits=number(p.get("digits", 2), 1, 8, "位数", True), prefix=text_value(p.get("prefix", ""), "前缀", 100), suffix=text_value(p.get("suffix", ""), "后缀", 100), include_no_caption=boolean(p.get("includeNoCaption", True), "无需字幕"), preserve_metadata=boolean(p.get("metadata", True), "元数据"), image_format=choice(p.get("format", "original"), ("original", "png", "jpg", "webp", "bmp"), "格式"), quality=number(p.get("quality", 95), 1, 100, "质量", True))
+        image_format = choice(p.get("format", "original"), ("original", "png", "jpg", "webp", "bmp"), "格式")
+        options = ExportOptions(output, naming_mode=mode, start_number=number(p.get("start", 1), 0, 999999, "起始序号", True), digits=number(p.get("digits", 2), 1, 8, "位数", True), prefix=text_value(p.get("prefix", ""), "前缀", 100), suffix=text_value(p.get("suffix", ""), "后缀", 100), include_no_caption=boolean(p.get("includeNoCaption", True), "无需字幕"), preserve_metadata=boolean(p.get("metadata", True), "元数据"), image_format=image_format, quality=None if image_format == "original" else number(p.get("quality", 95), 1, 100, "质量", True))
+        default_style, renderer = StyleSettings.from_mapping(project.default_style), RenderService()
+        left_out: dict[str, list[str]] = {}
+        overlapping, animations = [], []
+        for asset in project.assets:
+            reason, overlap, animated = self._export_check(asset, default_style, project.show_speaker, renderer)
+            if reason:
+                left_out.setdefault(reason, []).append(asset.id)
+                continue
+            if overlap:
+                overlapping.append(asset.id)
+            if animated:
+                animations.append(asset.id)
+        skipped = {identifier for ids in left_out.values() for identifier in ids}
+        project.assets = [a for a in project.assets if a.id not in skipped]
         inspected = OutputPreflight().inspect(project.assets, options)
         errors = [{"message": x, "assetIds": []} for x in inspected.errors]
         warnings = [{"message": x, "assetIds": []} for x in inspected.warnings]
-        # One card per problem, not per file: 200 unconfirmed images are a single task in 校对.
-        unconfirmed = [a for a in project.assets if a.caption_status in {CaptionStatus.MISSING, CaptionStatus.NEEDS_REVIEW}]
+        # One card per problem, not per file. Review is optional (2026-11-13: 1000 images cannot all be confirmed by
+        # hand): images awaiting review or a caption are warnings with a one-click fix, and export follows the text.
+        unconfirmed = [a for a in project.assets if a.caption_status is CaptionStatus.NEEDS_REVIEW]
+        uncaptioned = [a for a in project.assets if a.caption_status is CaptionStatus.MISSING]
+        bare = [a for a in uncaptioned if not any(c.text.strip() for c in a.subtitles)]
+        bare_ids = {a.id for a in bare}
+        partial = [a for a in uncaptioned if a.id not in bare_ids]
         if unconfirmed:
-            errors.append({"message": f"{unconfirmed[0].filename} 的字幕尚未确认" if len(unconfirmed) == 1 else f"{len(unconfirmed)} 张图片的字幕尚未确认，例如 {unconfirmed[0].filename}", "assetIds": [a.id for a in unconfirmed]})
-        for asset in project.assets:
-            try:
-                self._source(asset)
-                for caption in asset.subtitles:
-                    style = self._style(caption)
-                    validate_stored_style(style)
-                    if style.get("font_path"):
-                        missing = {ord(c) for c in caption.text if not c.isspace()} - font_codepoints(style["font_path"], style.get("font_index", 0))
-                        if missing:
-                            errors.append({"message": f"{asset.filename} 的字体缺少 {len(missing)} 个字形，请替换字体", "assetIds": [asset.id]})
-            except (CommandError, OSError) as error:
-                errors.append({"message": str(error), "assetIds": [asset.id]})
+            warnings.append({"message": f"{len(unconfirmed):,} 张图片的字幕还没确认，会按现在的字幕导出", "assetIds": [a.id for a in unconfirmed], "action": "confirm"})
+        if bare:
+            warnings.append({"message": f"{len(bare):,} 张图片没有字幕，{'会按原图导出' if options.include_no_caption else '不会导出'}", "assetIds": [a.id for a in bare], "action": "no_caption"})
+        if partial:
+            warnings.append({"message": f"{len(partial):,} 张图片有空字幕，空的那条不会导出", "assetIds": [a.id for a in partial]})
+        if overlapping:
+            warnings.append({"message": f"{len(overlapping):,} 张图片的字幕可能重叠，请检查位置", "assetIds": overlapping})
+        if animations:
+            warnings.append({"message": f"{len(animations):,} 张动图只会导出第一帧", "assetIds": animations})
         plan = ExportPlanner().plan(copy.deepcopy(project), options)
         errors.extend({"message": x, "assetIds": []} for x in plan.blocking_errors)
-        # Images awaiting review already block above; the planner's per-file reminder would repeat it.
-        repeated = {message for a in unconfirmed for message in (f"{a.filename} 的自动字幕结构需确认", f"{a.filename} 没有字幕")}
-        warnings.extend({"message": x, "assetIds": []} for x in plan.warnings if x not in repeated)
+        # The cards above already cover these images; the planner's per-file reminders would repeat them.
+        repeated = {message for a in unconfirmed + uncaptioned for message in (f"{a.filename} 的自动字幕结构需确认", f"{a.filename} 没有字幕")}
+        # Exporting again into the same folder renames every file: one card, not one per file.
+        renamed = [x.rsplit("将输出为 ", 1)[1] for x in plan.warnings if " 已存在，将输出为 " in x]
+        warnings.extend({"message": x, "assetIds": []} for x in plan.warnings if x not in repeated and " 已存在，将输出为 " not in x)
+        if renamed:
+            warnings.append({"message": f"{len(renamed):,} 个文件在保存位置已有同名文件，会另存为新名字（例如 {renamed[0]}），不覆盖", "assetIds": []})
         assets_by_path = {a.source_path: a for a in project.assets}
-        blocked_ids = {identifier for error in errors for identifier in error["assetIds"]}
-        renderer = RenderService()
+        # A name Windows refuses comes from that file's own name, or from the prefix and suffix and then hits every file.
+        named, unnamed, too_long = [], [], []
         for item in plan.items:
-            if not windows_filename(item.output_path.name):
-                errors.append({"message": f"Windows 文件名不合法：{item.output_path.name}", "assetIds": []})
-            if item.output_path.parent.resolve() != output:
-                errors.append({"message": "输出文件名不能包含路径", "assetIds": []})
-            asset = assets_by_path.get(item.source_path)
-            if asset and asset.id not in blocked_ids:
-                try:
-                    with Image.open(self._source(asset)) as opened:
-                        dimensions = opened.size
-                        if opened.getexif().get(274) in {5, 6, 7, 8}:
-                            dimensions = dimensions[::-1]
-                    geometry = renderer.measure(dimensions, item.captions, item.style)
-                    if any(g["overflow"] for g in geometry):
-                        errors.append({"message": f"{asset.filename} 的字幕超出图片，请减小字号或调整位置", "assetIds": [asset.id]})
-                    for i, first in enumerate(geometry):
-                        x1, y1, x2, y2 = first["bounds"]
-                        if any(min(x2, g["bounds"][2]) > max(x1, g["bounds"][0]) and min(y2, g["bounds"][3]) > max(y1, g["bounds"][1]) for g in geometry[i + 1:]):
-                            warnings.append({"message": f"{asset.filename} 的字幕区域可能重叠，请检查位置", "assetIds": [asset.id]})
-                            break
-                except (ValueError, OSError) as error:
-                    errors.append({"message": str(error), "assetIds": [asset.id]})
+            name = item.output_path.name
+            long = len(name.encode("utf-16-le")) > 480 or (os.name != "nt" and len(name.encode()) > 255)
+            (too_long if long else named if windows_filename(name) else unnamed).append(item)
+        left_out["name"] = [assets_by_path[item.source_path].id for item in unnamed]
+        left_out["long"] = [assets_by_path[item.source_path].id for item in too_long]
+        plan.items = named
+        if any(item.output_path.parent.resolve() != output for item in plan.items):
+            errors.append({"message": "输出文件名不能包含路径", "assetIds": []})
+        warnings[:0] = [{"message": LEFT_OUT[reason].format(f"{len(ids):,}"), "assetIds": ids, "action": "resolve"} for reason, ids in left_out.items() if ids]
         if not plan.items:
             errors.append({"message": "没有可导出的图片", "assetIds": []})
         token = uuid4().hex
-        self.preflight = {"id": token, "revision": project.revision, "plan": plan, "options": options, "errors": errors, "warnings": warnings}
+        self.preflight = {"id": token, "projectId": project.id, "revision": project.revision, "plan": plan, "options": options, "errors": errors, "warnings": warnings}
         outputs = [{"assetId": assets_by_path[i.source_path].id, "file": i.output_path.name} for i in plan.items if i.source_path in assets_by_path]
         return {"id": token, "revision": project.revision, "errors": errors, "warnings": warnings, "files": [i.output_path.name for i in plan.items], "outputs": outputs, "count": len(plan.items)}
 
     def start_export(self, p):
         check = self.preflight
-        if not check or check["id"] != p.get("preflightId") or check["revision"] != self._require_project().revision:
+        current = self._require_project()
+        if not check or check["id"] != p.get("preflightId") or check["projectId"] != current.id or check["revision"] != current.revision:
             raise CommandError("PREFLIGHT_EXPIRED", "预检已过期，请重新检查")
         if check["errors"]:
             raise CommandError("PREFLIGHT_BLOCKED", "请先解决预检问题")
@@ -1215,7 +1294,11 @@ class WebController:
             raise CommandError("WARNINGS_REQUIRE_CONFIRMATION", "请确认导出提示")
         items = copy.deepcopy(check["plan"].items)
         for item in items:
-            item.source_fingerprint = fingerprint(item.source_path)
+            try:
+                item.source_fingerprint = fingerprint(item.source_path)
+            except OSError:
+                # Gone since the check: that file fails on its own and the others still go.
+                item.source_fingerprint = None
         self.job = {"id": uuid4().hex, "revision": check["revision"], "state": "running", "items": items, "output_dir": check["options"].output_dir, "error": None}
         self._launch_job()
         return {"jobId": self.job["id"]}
@@ -1303,7 +1386,7 @@ class WebController:
                 except Exception as error:
                     with self.lock:
                         item.status = JobItemStatus.FAILED
-                        item.error_message = str(error)
+                        item.error_message = plain_error(error, item.source_path)
                 else:
                     with self.lock:
                         item.status = JobItemStatus.SUCCESS
@@ -1312,7 +1395,9 @@ class WebController:
             job["error"] = str(error)
         finally:
             with self.lock:
-                job["state"] = "stopped" if self.stop_event.is_set() else "failed" if job["error"] or any(i.status != JobItemStatus.SUCCESS for i in job["items"]) else "complete"
+                # Stopping during the last image leaves nothing undone: that is complete.
+                done = not job["error"] and all(i.status == JobItemStatus.SUCCESS for i in job["items"])
+                job["state"] = "complete" if done else "stopped" if self.stop_event.is_set() else "failed"
                 try:
                     self._save_manifest()
                 except OSError as error:

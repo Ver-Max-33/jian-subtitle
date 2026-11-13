@@ -94,6 +94,12 @@ class StyleSettings:
         return cls(**normalized)
 
 
+def stacked_position(index: int, count: int) -> tuple[float, float]:
+    """Where a caption sits before anyone places it: stacked up from the bottom in reading order, the first one on
+    top, as 智能避让 places them (2026-11-13; the first used to sit lowest, so a dialogue read upwards)."""
+    return 0.5, max(0.12, 0.86 - (count - 1 - index) * 0.12)
+
+
 @dataclass(frozen=True, slots=True)
 class CaptionRenderRequest:
     text: str
@@ -113,7 +119,8 @@ class ExportJobItem:
     status: JobItemStatus = JobItemStatus.PENDING
     error_code: str | None = None
     error_message: str | None = None
-    quality: int = 95
+    # None: 保持原格式, the source's own character (a lossless WebP stays lossless).
+    quality: int | None = 95
     jpeg_background: tuple[int, int, int] = (255, 255, 255)
     source_fingerprint: str | None = None
     output_fingerprint: str | None = None
@@ -140,7 +147,7 @@ class ExportOptions:
     preserve_format: bool = True
     preserve_metadata: bool = True
     image_format: str = "original"
-    quality: int = 95
+    quality: int | None = 95
     jpeg_background: tuple[int, int, int] = (255, 255, 255)
 
 

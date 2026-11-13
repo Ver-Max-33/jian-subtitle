@@ -103,7 +103,7 @@ class ExportManifestStore:
             status=JobItemStatus(str(values.get("status", "pending"))),
             error_code=values.get("error_code"),
             error_message=values.get("error_message"),
-            quality=int(values.get("quality", 95)),
+            quality=None if values.get("quality", 95) is None else int(values.get("quality", 95)),
             jpeg_background=tuple(values.get("jpeg_background", (255, 255, 255))),
             source_fingerprint=values.get("source_fingerprint"),
             output_fingerprint=values.get("output_fingerprint"),

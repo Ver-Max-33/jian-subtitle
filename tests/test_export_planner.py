@@ -10,6 +10,20 @@ from subtitle_app.models import CaptionStatus, ExportOptions, NamingMode, Projec
 
 
 class ExportPlannerTests(unittest.TestCase):
+    def test_names_that_differ_only_in_unicode_form_are_numbered(self):
+        # macOS treats 「café」 written two ways as one name: the second file used to fail instead of being numbered.
+        import unicodedata
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            paths = []
+            for folder, form in (("a", "NFC"), ("b", "NFD")):
+                (root / folder).mkdir()
+                paths.append(root / folder / unicodedata.normalize(form, "café.png"))
+                Image.new("RGB", (100, 80), "white").save(paths[-1])
+            project = Project.create("同名", ImportService().import_paths(paths).assets)
+            names = [item.output_path.name for item in ExportPlanner().plan(project, ExportOptions(output_dir=root / "out")).items]
+            self.assertEqual(2, len({unicodedata.normalize("NFC", name).casefold() for name in names}), names)
+
     def test_plan_hides_speaker_when_off(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -191,6 +205,22 @@ class ExportPlannerTests(unittest.TestCase):
 
         self.assertFalse(any("没有字幕" in warning for warning in plan.warnings))
         self.assertTrue(plan.items[0].copy_original)
+
+    def test_empty_captions_are_not_drawn(self):
+        # An empty caption with a background would export as an empty dark box.
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "第一条.png"
+            Image.new("RGB", (100, 80), "white").save(source)
+            project = Project.create("空字幕", ImportService().import_paths([source]).assets)
+            subtitles = project.assets[0].subtitles
+            subtitles.append(type(subtitles[0])("second", "  ", subtitles[0].source))
+            subtitles.append(type(subtitles[0])("third", "第三条", subtitles[0].source))
+            captions = ExportPlanner().plan(project, ExportOptions(output_dir=root / "output")).items[0].captions
+            self.assertEqual(["第一条", "第三条"], [c.text for c in captions])
+            # Slots count the empty caption too: 第一条 stays where the canvas shows it, on top of three.
+            self.assertEqual((0.5, round(0.86 - 2 * .12, 2)), (captions[0].position_ratio[0], round(captions[0].position_ratio[1], 2)))
+            self.assertEqual(0.86, round(captions[1].position_ratio[1], 2))
 
 
 if __name__ == "__main__":

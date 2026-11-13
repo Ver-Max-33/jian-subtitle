@@ -373,6 +373,44 @@ if __name__ == "__main__":
     unittest.main()
 
 
+class OneCopyTests(unittest.TestCase):
+    # Two copies of 简幕 could open one project and overwrite each other's saves (2026-11-13).
+    def test_a_second_copy_shows_the_first_and_gives_way(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(desktop, "show_running_copy", return_value=True) as shown:
+            first = desktop.one_copy(Path(directory))
+            self.assertIsNotNone(first)
+            self.assertIsNone(desktop.one_copy(Path(directory)))
+            shown.assert_called()
+            first.close()
+            again = desktop.one_copy(Path(directory))
+            self.assertIsNotNone(again)
+            again.close()
+
+    def test_a_copy_that_is_closing_gets_time_to_let_go(self):
+        # An update starts 简幕 again while the old copy may still be closing; its window is gone already.
+        with tempfile.TemporaryDirectory() as directory, patch.object(desktop, "show_running_copy", return_value=False):
+            first = desktop.one_copy(Path(directory))
+            threading.Timer(0.3, first.close).start()
+            second = desktop.one_copy(Path(directory))
+            self.assertIsNotNone(second)
+            second.close()
+
+    def test_a_second_launch_says_whether_it_found_the_window(self):
+        # 0: the open window came forward; 3: a copy holds the lock without a window (build_windows.ps1 checks this).
+        with tempfile.TemporaryDirectory() as directory, patch.object(desktop, "one_copy", return_value=None):
+            with patch.object(desktop, "show_running_copy", return_value=True):
+                self.assertEqual(0, desktop.main(["--data-dir", directory]))
+            with patch.object(desktop, "show_running_copy", return_value=False):
+                self.assertEqual(3, desktop.main(["--data-dir", directory]))
+
+    def test_other_data_folders_are_other_copies(self):
+        with tempfile.TemporaryDirectory() as one, tempfile.TemporaryDirectory() as two:
+            first, second = desktop.one_copy(Path(one)), desktop.one_copy(Path(two))
+            self.assertIsNotNone(first)
+            self.assertIsNotNone(second)
+            first.close(); second.close()
+
+
 class ConsoleEncodingTests(unittest.TestCase):
     def test_smoke_test_prints_on_an_english_windows_console(self):
         # A started EXE inherits the runner's cp1252 pipe; frozen apps ignore PYTHONUTF8, and Chinese cannot be encoded.

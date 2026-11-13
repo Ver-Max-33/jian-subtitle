@@ -150,6 +150,9 @@ export function Toolbar() {
   const busy = state?.batchTask?.state === 'running';
   const importing = state?.importTask?.state === 'running' || state?.importTask?.state === 'stopping';
   const toolIndex = w.tool === 'text' ? 1 : 0;
+  // The canvas tools keep their place, disabled, outside the canvas: when they disappeared the centred toolbar moved
+  // 75 px between views, and a click where 下一张 had been landed on 上一张 (2026-11-13).
+  const off = !editing || importing;
   useEffect(() => {
     if (w.tool !== 'text') return;
     const key = (e: KeyboardEvent) => { if (e.key === 'Escape') w.setTool('select'); };
@@ -157,12 +160,12 @@ export function Toolbar() {
     return () => window.removeEventListener('keydown', key);
   }, [w.tool]);
   return <div className="toolbar" role="toolbar" aria-label="画布工具" inert={busy}>
-    {editing && !importing && <><div className="tool-group tools" style={{ '--tool': toolIndex } as CSSProperties}>
-      <IconButton label="选择" shortcut="V" active={w.tool === 'select'} disabled={none} onClick={() => w.setTool('select')}><MousePointer2 /></IconButton>
-      <IconButton label="添加字幕" shortcut="T" active={w.tool === 'text'} disabled={none || w.batch || !w.asset || (w.asset.captions.length >= 20)} onClick={() => w.setTool(w.tool === 'text' ? 'select' : 'text')}><Type /></IconButton>
-      <IconButton label="人物区域" toggled={w.showRegions} disabled={none || w.batch} onClick={() => { const next = !w.showRegions; w.setShowRegions(next); if (next && w.asset) w.loadRegions(w.asset.id); }}><ScanFace /></IconButton>
-      <IconButton label="重新排列" disabled={none || w.batch || !w.asset?.captions.length} onClick={w.rearrange}><Sparkles /></IconButton>
-    </div><span className="tool-divider" /></>}
+    <div className={`tool-group tools ${off ? 'off' : ''}`} style={{ '--tool': toolIndex } as CSSProperties}>
+      <IconButton label="选择" shortcut="V" active={!off && w.tool === 'select'} disabled={off || none} onClick={() => w.setTool('select')}><MousePointer2 /></IconButton>
+      <IconButton label="添加字幕" shortcut="T" active={!off && w.tool === 'text'} disabled={off || none || w.batch || !w.asset || (w.asset.captions.length >= 20)} onClick={() => w.setTool(w.tool === 'text' ? 'select' : 'text')}><Type /></IconButton>
+      <IconButton label="人物区域" toggled={!off && w.showRegions} disabled={off || none || w.batch} onClick={() => { const next = !w.showRegions; w.setShowRegions(next); if (next && w.asset) w.loadRegions(w.asset.id); }}><ScanFace /></IconButton>
+      <IconButton label="重新排列" disabled={off || none || w.batch || !w.asset?.captions.length} onClick={w.rearrange}><Sparkles /></IconButton>
+    </div><span className="tool-divider" />
     <div className="tool-group">
       <IconButton label="上一张" shortcut="←" disabled={index <= 0} onClick={() => w.step(-1)}><ChevronLeft /></IconButton>
       <span className="tool-count numeric">{index >= 0 ? index + 1 : 0} / {total}</span>

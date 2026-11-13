@@ -258,10 +258,12 @@ class WebControllerTests(unittest.TestCase):
         self.assertIn(result["result"]["token"], self.controller.media)
         self.assertNotIn("source_path", result["result"])
 
-    def test_preflight_blocks_unconfirmed_captions(self):
+    def test_preflight_warns_about_unconfirmed_and_uncaptioned_images(self):
+        # Since 2026-11-13 review is optional: these are warnings with a one-click fix, not blockers.
         self.controller.outputs["output"] = self.root / "output"
-        result = self.request("preflight", {"outputToken": "output"})
-        self.assertTrue(result["result"]["errors"])
+        check = self.request("preflight", {"outputToken": "output"})["result"]
+        self.assertEqual([], check["errors"])
+        self.assertEqual({"confirm": 2, "no_caption": 1}, {w["action"]: len(w["assetIds"]) for w in check["warnings"] if w.get("action")})
 
     def test_preflight_rejects_ungranted_output_path(self):
         result = self.request("preflight", {"outputToken": str(self.root)})

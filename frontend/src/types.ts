@@ -43,6 +43,7 @@ export interface Snapshot {
 }
 export interface Font { id: string; family: string; label: string; variant: string; index: number; weight: number | null; bundled: boolean }
 export interface Preview { token: string; backgroundToken?: string; sourceKey?: string; assetId: string; revision: number; width: number; height: number; filename: string; bytes: number; overlays: { id: string; x: number; y: number; width: number; height: number; renderWidth: number; rotation: number; layerToken?: string }[] }
-export interface Issue { message: string; assetIds: string[] }
+/** `action`: the one-click fix the export check offers for this warning. */
+export interface Issue { message: string; assetIds: string[]; action?: 'confirm' | 'no_caption' | 'resolve' }
 export interface Preflight { id: string; revision: number; errors: Issue[]; warnings: Issue[]; files: string[]; outputs: { assetId: string; file: string }[]; count: number }
 export interface Reply<T> { ok: boolean; result: T; state?: Snapshot; error?: { code: string; message: string; affectedIds: string[] } }

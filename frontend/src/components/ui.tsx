@@ -12,6 +12,7 @@ import { Toggle } from '@base-ui/react/toggle';
 import { Check, ChevronDown, ChevronRight, Minus, Plus, X } from 'lucide-react';
 import { useApp } from '../state';
 import { isMac, shortcutText } from '../keymap';
+import { settleNumber } from '../numberInput';
 
 type Variant = 'primary' | 'secondary' | 'soft' | 'danger' | 'ghost' | 'link';
 type Side = 'top' | 'bottom' | 'left' | 'right';
@@ -115,55 +116,71 @@ const valid = (text: string, min: number, max: number, step: number) => {
  * Inline-labelled number, like the Figma inspector. Enter or blur commits one undoable change; Esc restores;
  * ↑↓ step (Shift ×10); dragging the label scrubs with a live preview and commits on release.
  */
-export function NumberField({ label, prefix, value, onCommit, onPreview, min, max, step = 1, unit, mixed = false, disabled = false, className = '', digits = 0, marker, hint }: { label: string; prefix?: ReactNode; value: number; onCommit: (value: number) => void; onPreview?: (value: number | undefined) => void; min: number; max: number; step?: number; unit?: string; mixed?: boolean; disabled?: boolean; className?: string; digits?: number; marker?: ReactNode; hint?: ReactNode }) {
+export function NumberField({ label, prefix, value, onCommit, onPreview, min, max, step = 1, nudge = step, unit, mixed = false, disabled = false, className = '', digits = 0, marker }: { label: string; prefix?: ReactNode; value: number; onCommit: (value: number) => void; onPreview?: (value: number | undefined) => void; min: number; max: number; step?: number; /** ↑↓ change; typing and dragging keep `step`. */ nudge?: number; unit?: string; mixed?: boolean; disabled?: boolean; className?: string; digits?: number; marker?: ReactNode }) {
   const shown = (n: number) => (mixed ? '' : String(Number(n.toFixed(digits))));
   const [draft, setDraft] = useState(shown(value));
   const editing = useRef(false);
+  // Typed into or stepped since focus. Until then a focused field keeps following outside changes (undo, another
+  // edit); it used to keep the old text and write it back on blur (2026-11-13).
+  const dirty = useRef(false);
   // `value` follows the live preview while typing, so a commit compares against the value editing started from.
   const start = useRef(value);
-  useEffect(() => { if (!editing.current) setDraft(shown(value)); }, [value, mixed]);
+  useEffect(() => { if (!editing.current || !dirty.current) setDraft(shown(value)); }, [value, mixed]);
   const invalid = draft !== '' && !valid(draft, min, max, step);
   const clamp = (n: number) => Math.min(max, Math.max(min, Number(n.toFixed(Math.max(digits, step < 1 ? 1 : 0)))));
+  // Set only while Esc blurs the field: that blur restores, it does not commit.
+  const cancelling = useRef(false);
   const commit = (text: string) => {
+    if (cancelling.current) return;
     editing.current = false;
+    if (!dirty.current) { setDraft(shown(value)); return; }
+    dirty.current = false;
     if (text === '' && mixed) { onPreview?.(undefined); return; }
-    if (!valid(text, min, max, step)) return;
-    const next = Number(text);
+    // Out of range clamps, not a number goes back: an invalid field would otherwise block every other edit.
+    const next = settleNumber(text, { min, max, step, digits });
+    if (next === null) { setDraft(shown(value)); onPreview?.(undefined); return; }
+    setDraft(shown(next));
     if (mixed || next !== start.current) onCommit(next); else onPreview?.(undefined);
   };
   const scrub = useRef<{ x: number; start: number; last: number; id: number } | null>(null);
+  // A drag on the label ends in a click on it, and a click on a label focuses its input: not after a drag.
+  const scrubbed = useRef(false);
   return <label className={`field number ${invalid ? 'invalid' : ''} ${disabled ? 'disabled' : ''} ${className}`} title={invalid ? `请输入 ${min}–${max}${step >= 1 ? ' 的整数' : ''}` : undefined}>
     {marker}
     {prefix !== undefined && <span className="field-prefix scrub" aria-hidden
+      onClick={e => { if (scrubbed.current) { e.preventDefault(); scrubbed.current = false; } }}
       onPointerDown={e => {
         if (disabled || e.button !== 0) return;
         e.preventDefault(); e.currentTarget.setPointerCapture(e.pointerId);
+        scrubbed.current = false;
         scrub.current = { x: e.clientX, start: mixed ? min : value, last: mixed ? min : value, id: e.pointerId };
       }}
       onPointerMove={e => {
         const s = scrub.current;
         if (!s || s.id !== e.pointerId) return;
         const next = clamp(s.start + Math.round((e.clientX - s.x) / 2) * step * (e.shiftKey ? 10 : 1));
-        if (next !== s.last) { s.last = next; setDraft(shown(next)); onPreview?.(next); }
+        if (next !== s.last) { s.last = next; scrubbed.current = true; setDraft(shown(next)); onPreview?.(next); }
       }}
       onPointerUp={e => { const s = scrub.current; if (!s || s.id !== e.pointerId) return; scrub.current = null; if (s.last !== s.start) onCommit(s.last); else onPreview?.(undefined); }}
       onLostPointerCapture={() => { if (scrub.current) { scrub.current = null; setDraft(shown(value)); onPreview?.(undefined); } }}>{prefix}</span>}
     <input aria-label={label} inputMode="decimal" value={draft} placeholder={mixed ? '混合' : undefined} disabled={disabled} aria-invalid={invalid}
-      onFocus={e => { editing.current = true; start.current = value; e.currentTarget.select(); }}
-      onChange={e => { const text = e.target.value; setDraft(text); onPreview?.(valid(text, min, max, step) ? Number(text) : undefined); }}
+      onFocus={e => { editing.current = true; dirty.current = false; start.current = value; e.currentTarget.select(); }}
+      onChange={e => { const text = e.target.value; dirty.current = true; setDraft(text); onPreview?.(valid(text, min, max, step) ? Number(text) : undefined); }}
       onBlur={e => commit(e.target.value)}
       onKeyDown={e => {
         if (e.key === 'Enter' && !e.nativeEvent.isComposing) e.currentTarget.blur();
-        else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); editing.current = false; setDraft(shown(value)); onPreview?.(undefined); e.currentTarget.blur(); }
+        else if (e.key === 'Escape') {
+          e.preventDefault(); e.stopPropagation(); editing.current = false; setDraft(shown(start.current)); onPreview?.(undefined);
+          cancelling.current = true; e.currentTarget.blur(); cancelling.current = false;
+        }
         else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
           e.preventDefault();
           const base = valid(draft, min, max, step) ? Number(draft) : mixed ? min : value;
-          const next = clamp(base + (e.key === 'ArrowUp' ? 1 : -1) * step * (e.shiftKey ? 10 : 1));
-          setDraft(shown(next)); onPreview?.(next);
+          const next = clamp(base + (e.key === 'ArrowUp' ? 1 : -1) * nudge * (e.shiftKey ? 10 : 1));
+          dirty.current = true; setDraft(shown(next)); onPreview?.(next);
         }
       }} />
     {unit && <span className="field-suffix">{unit}</span>}
-    {hint !== undefined && <span className="field-hint numeric">{hint}</span>}
   </label>;
 }
 

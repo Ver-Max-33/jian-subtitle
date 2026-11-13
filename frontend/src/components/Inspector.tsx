@@ -133,7 +133,8 @@ function ListInspector({ asset }: { asset: Asset }) {
   const w = useWorkspace();
   const caption = w.caption ?? asset.captions[0];
   return <>
-    <Section title="预览" actions={<span className="section-meta numeric">{two(w.assets.indexOf(asset) + 1)} / {two(w.assets.length)}</span>}><RenderedPreview asset={asset} /></Section>
+    {/* One preview per image: the previous picture must not stand under this image's number while it loads. */}
+    <Section title="预览" actions={<span className="section-meta numeric">{two(w.assets.indexOf(asset) + 1)} / {two(w.assets.length)}</span>}><RenderedPreview key={asset.id} asset={asset} /></Section>
     {caption ? <SingleCaption asset={asset} caption={caption} collapsible /> : <NoCaptions asset={asset} />}
   </>;
 }

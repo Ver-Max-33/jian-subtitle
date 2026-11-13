@@ -3,6 +3,7 @@ from dataclasses import replace
 import http.client
 import io
 import json
+import os
 import tempfile
 import threading
 import time
@@ -155,6 +156,30 @@ class BoundaryIntegrationTests(unittest.TestCase):
         self.assertEqual('complete', self.c.job['state'])
         self.assertEqual(original_time, first.stat().st_mtime_ns)
 
+    def test_stopping_during_the_last_image_still_completes(self):
+        # Stopping finishes the current image; when that was the last one, nothing is left undone.
+        original = RenderService.render
+        started = threading.Event()
+        release = threading.Event()
+        def slow(renderer, *args, **kwargs):
+            if threading.current_thread().name == 'subtitle-export':
+                started.set(); release.wait(5)
+            return original(renderer, *args, **kwargs)
+        with patch.object(RenderService, 'render', slow):
+            self.start(assetIds=[self.c.project.assets[0].id])
+            self.assertTrue(started.wait(5))
+            self.call('stop_export', {'jobId': self.c.job['id']})
+            release.set(); self.wait_job()
+        self.assertEqual('complete', self.c.job['state'])
+
+    def test_an_animation_says_only_its_first_frame_is_exported(self):
+        frames = [Image.new('RGB', (640, 360), color) for color in ('white', 'gray')]
+        frames[0].save(self.files[2], save_all=True, append_images=frames[1:], duration=100)
+        check = self.call('preflight', {'outputToken': 'out'})['result']
+        cards = [w for w in check['warnings'] if '动图' in w['message']]
+        self.assertEqual([[self.c.project.assets[2].id]], [w['assetIds'] for w in cards])
+        self.assertEqual(3, check['count'])
+
     def test_restart_recovers_job_without_trusting_project_manifest(self):
         self.start(); self.wait_job()
         first = self.c.job['items'][0]
@@ -268,11 +293,177 @@ class BoundaryIntegrationTests(unittest.TestCase):
         self.assertFalse(reply['ok'])
         self.assertEqual('PRESET_EXISTS', reply['error']['code'])
 
-    def test_preflight_groups_unconfirmed_images_into_one_issue(self):
+    def test_unconfirmed_images_are_one_warning_and_do_not_block(self):
+        # 1000 images cannot all be confirmed by hand: review is optional, export follows the current text.
         for asset in self.c.project.assets[:2]:
             self.call('caption_text', {'assetId': asset.id, 'captionId': asset.subtitles[0].id, 'text': '改过的字幕'})
-        errors = self.call('preflight', {'outputToken': 'out'})['result']['errors']
-        self.assertEqual([2], [len(e['assetIds']) for e in errors if '尚未确认' in e['message']])
+        check = self.call('preflight', {'outputToken': 'out'})['result']
+        self.assertEqual([], check['errors'])
+        unconfirmed = [w for w in check['warnings'] if w.get('action') == 'confirm']
+        self.assertEqual([2], [len(w['assetIds']) for w in unconfirmed])
+        self.assertIn('还没确认', unconfirmed[0]['message'])
+        self.assertTrue(self.call('start_export', {'preflightId': check['id'], 'acknowledge': True})['ok'])
+        self.wait_job()
+        self.assertEqual('complete', self.c.job['state'])
+
+    def test_images_without_captions_are_one_warning_and_export_as_the_original(self):
+        asset = self.c.project.assets[0]
+        self.call('caption_delete', {'assetId': asset.id, 'captionId': asset.subtitles[0].id})
+        check = self.call('preflight', {'outputToken': 'out'})['result']
+        self.assertEqual([], check['errors'])
+        missing = [w for w in check['warnings'] if w.get('action') == 'no_caption']
+        self.assertEqual([[asset.id]], [w['assetIds'] for w in missing])
+        self.assertIn('按原图导出', missing[0]['message'])
+        self.assertEqual(3, check['count'])
+        skipped = self.call('preflight', {'outputToken': 'out', 'includeNoCaption': False})['result']
+        self.assertIn('不会导出', [w for w in skipped['warnings'] if w.get('action') == 'no_caption'][0]['message'])
+        self.assertEqual(2, skipped['count'])
+
+    def test_an_empty_caption_is_a_warning_not_a_box(self):
+        asset = self.c.project.assets[0]
+        self.call('caption_add', {'assetId': asset.id})
+        check = self.call('preflight', {'outputToken': 'out'})['result']
+        self.assertEqual([], check['errors'])
+        self.assertEqual([[asset.id]], [w['assetIds'] for w in check['warnings'] if '空字幕' in w['message']])
+
+    def left_out(self, check, text):
+        """The ids on the card for images left out of the export for this reason."""
+        cards = [w for w in check['warnings'] if text in w['message'] and '不会导出' in w['message']]
+        self.assertEqual(1, len(cards), check['warnings'])
+        self.assertEqual('resolve', cards[0].get('action'))
+        return cards[0]['assetIds']
+
+    def test_a_broken_image_is_left_out_and_the_rest_export(self):
+        # One broken file must not hold back the rest (2026-11-13).
+        broken = self.c.project.assets[1]
+        self.files[1].write_bytes(b'not an image')
+        check = self.call('preflight', {'outputToken': 'out'})['result']
+        self.assertEqual([], check['errors'])
+        self.assertEqual([broken.id], self.left_out(check, '无法读取'))
+        self.assertEqual(2, check['count'])
+        self.assertTrue(self.call('start_export', {'preflightId': check['id'], 'acknowledge': True})['ok'])
+        self.wait_job()
+        self.assertEqual('complete', self.c.job['state'])
+        self.assertEqual(sorted([self.files[0].name, self.files[2].name]), sorted(p.name for p in (self.root / 'out').iterdir()))
+
+    def test_a_missing_source_is_left_out(self):
+        missing = self.c.project.assets[0]
+        self.files[0].unlink()
+        check = self.call('preflight', {'outputToken': 'out'})['result']
+        self.assertEqual([], check['errors'])
+        self.assertEqual([missing.id], self.left_out(check, '找不到源文件'))
+        self.assertEqual(2, check['count'])
+
+    def test_an_overflowing_caption_is_left_out_without_a_gap_in_the_numbers(self):
+        big = self.c.project.assets[1]
+        self.call('caption_style', {'assetId': big.id, 'captionId': big.subtitles[0].id, 'style': {'safe_edge': False}})
+        self.call('caption_position', {'assetId': big.id, 'captionId': big.subtitles[0].id, 'x': 0.99, 'y': 0.5})
+        check = self.call('preflight', {'outputToken': 'out', 'naming': 'sequence'})['result']
+        self.assertEqual([], check['errors'])
+        self.assertEqual([big.id], self.left_out(check, '超出画面'))
+        self.assertEqual(['01.png', '02.png'], check['files'])
+        self.assertEqual([a.id for a in self.c.project.assets if a.id != big.id], [o['assetId'] for o in check['outputs']])
+
+    def test_an_unavailable_font_is_left_out_and_never_opened(self):
+        odd = self.c.project.assets[2]
+        odd.subtitles[0].style_overrides['font_path'] = str(self.root / '不存在.ttf')
+        check = self.call('preflight', {'outputToken': 'out'})['result']
+        self.assertEqual([], check['errors'])
+        self.assertEqual([odd.id], self.left_out(check, '字体不可用'))
+        self.assertNotIn(odd.id, [o['assetId'] for o in check['outputs']])
+
+    def test_missing_glyphs_count_the_speaker_prefix_too(self):
+        plain, spoken = self.c.project.assets[0], self.c.project.assets[1]
+        self.call('caption_text', {'assetId': plain.id, 'captionId': plain.subtitles[0].id, 'text': '缺字'})
+        self.call('caption_speaker', {'assetId': spoken.id, 'captionId': spoken.subtitles[0].id, 'speaker': '鬼'})
+        self.call('project_settings', {'showSpeaker': True})
+        drawable = frozenset(map(ord, '字幕0123456789'))
+        with patch('subtitle_app.web_controller.font_codepoints', return_value=drawable):
+            check = self.call('preflight', {'outputToken': 'out'})['result']
+        self.assertEqual([], check['errors'])
+        self.assertEqual(sorted([plain.id, spoken.id]), sorted(self.left_out(check, '缺少字形')))
+        self.assertEqual(1, check['count'])
+
+    def test_a_name_windows_refuses_is_left_out(self):
+        check = self.call('preflight', {'outputToken': 'out', 'prefix': '问?'})['result']
+        self.assertEqual(3, len(self.left_out(check, 'Windows 上不可用')))
+        self.assertIn('没有可导出的图片', [e['message'] for e in check['errors']])
+
+    def test_keeping_the_format_ignores_the_hidden_quality(self):
+        # 保持原格式 hides the quality slider; a value left at 10 from JPEG used to apply anyway.
+        self.call('preflight', {'outputToken': 'out', 'format': 'original', 'quality': 10})
+        self.assertEqual({None}, {item.quality for item in self.c.preflight['plan'].items})
+        self.call('preflight', {'outputToken': 'out', 'format': 'jpg', 'quality': 10})
+        self.assertEqual({10}, {item.quality for item in self.c.preflight['plan'].items})
+
+    def test_a_source_removed_after_the_check_fails_only_that_image(self):
+        check = self.call('preflight', {'outputToken': 'out', 'format': 'png'})['result']
+        self.files[1].unlink()
+        self.assertTrue(self.call('start_export', {'preflightId': check['id'], 'acknowledge': True})['ok'])
+        self.wait_job()
+        self.assertEqual(['success', 'failed', 'success'], [i.status.value for i in self.c.job['items']])
+        self.assertEqual('找不到源图片', self.c.job['items'][1].error_message)
+
+    @unittest.skipIf(os.name == 'nt', 'Windows ignores read-only folders')
+    def test_failed_files_say_why_in_plain_words(self):
+        check = self.call('preflight', {'outputToken': 'out', 'format': 'png'})['result']
+        out = self.root / 'out'
+        out.mkdir()
+        out.chmod(0o555)
+        try:
+            self.call('start_export', {'preflightId': check['id'], 'acknowledge': True})
+            self.wait_job()
+        finally:
+            out.chmod(0o755)
+        messages = {i.error_message for i in self.c.job['items']}
+        self.assertEqual({'没有权限写入保存位置'}, messages)
+
+    def test_a_check_cannot_start_an_export_in_another_project(self):
+        check = self.call('preflight', {'outputToken': 'out'})['result']
+        self.c.project = replace(self.c.project, id='另一个项目')
+        reply = self.call('start_export', {'preflightId': check['id'], 'acknowledge': True})
+        self.assertEqual('PREFLIGHT_EXPIRED', reply['error']['code'])
+
+    @unittest.skipIf(os.name == 'nt', 'NTFS counts 255 characters, not bytes')
+    def test_a_name_longer_than_the_disk_allows_is_left_out(self):
+        check = self.call('preflight', {'outputToken': 'out', 'prefix': '长' * 85})['result']
+        self.assertEqual(3, len(self.left_out(check, '文件名')))
+
+    def test_exporting_again_into_the_same_folder_is_one_card(self):
+        self.start(format='png')
+        self.wait_job()
+        check = self.call('preflight', {'outputToken': 'out', 'format': 'png'})['result']
+        self.assertEqual([], [w for w in check['warnings'] if '已存在' in w['message']])
+        renamed = [w['message'] for w in check['warnings'] if '同名' in w['message']]
+        self.assertEqual(1, len(renamed), check['warnings'])
+        self.assertIn('3 个', renamed[0])
+        self.assertTrue(all(name.endswith('_2.png') for name in check['files']))
+
+    def test_captions_without_a_place_stack_in_reading_order(self):
+        # The first caption on top, as 智能避让 places them; a dialogue used to read upwards (2026-11-13).
+        asset = self.c.project.assets[0]
+        added = self.call('caption_add', {'assetId': asset.id})['result']['captionId']
+        self.call('caption_text', {'assetId': asset.id, 'captionId': added, 'text': '第二条'})
+        shown = next(a for a in self.call('state')['result']['project']['assets'] if a['id'] == asset.id)
+        self.assertEqual([0.74, 0.86], [round(c['position'][1], 2) for c in shown['captions']])
+        self.call('preflight', {'outputToken': 'out'})
+        exported = self.c.preflight['plan'].items[0].captions
+        self.assertEqual([0.74, 0.86], [round(c.position_ratio[1], 2) for c in exported])
+
+    def test_a_broken_image_preview_says_so_in_plain_words(self):
+        asset = self.c.project.assets[0]
+        self.files[0].write_bytes(b'not an image')
+        for mode in ({'raw': True}, {'editable': True, 'layersOnly': True}):
+            reply = self.call('preview', {'assetId': asset.id, 'projectId': self.c.project.id, 'revision': self.c.project.revision, 'size': 160, **mode})
+            self.assertEqual('SOURCE_UNREADABLE', reply['error']['code'], reply)
+            self.assertNotIn(str(self.root), reply['error']['message'])
+
+    def test_nothing_left_to_export_is_an_error(self):
+        for path in self.files:
+            path.unlink()
+        check = self.call('preflight', {'outputToken': 'out'})['result']
+        self.assertIn('没有可导出的图片', [e['message'] for e in check['errors']])
+        self.assertEqual(3, len(self.left_out(check, '找不到源文件')))
 
     def test_preview_renders_unsaved_text_without_writing_project(self):
         asset = self.c.project.assets[0]

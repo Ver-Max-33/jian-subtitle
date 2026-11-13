@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 import threading
+import time
 from pathlib import Path
 
 from .web_controller import WebController
@@ -44,6 +45,45 @@ def frontend_dir():
     return Path(__file__).resolve().parents[2] / "frontend/dist"
 
 
+def show_running_copy() -> bool:
+    """Bring the running 简幕 window to the front; whether there was one (Windows only)."""
+    if sys.platform != "win32":
+        return False
+    import ctypes
+    user32 = ctypes.windll.user32
+    window = user32.FindWindowW(None, "简幕")
+    if not window:
+        return False
+    user32.ShowWindow(window, 9)  # SW_RESTORE: also back from a minimised window
+    user32.SetForegroundWindow(window)
+    return True
+
+
+def one_copy(data_dir: Path, wait: float = 5.0):
+    """The lock that lets one copy of 简幕 run per data folder, held while the returned file stays open; None when
+    another copy has it. Two copies could open one project and overwrite each other's saves (2026-11-13), so the other
+    copy's window comes forward instead. A copy that is still closing (an update starting 简幕 again) gets `wait`
+    seconds to let go. The system frees the lock when a copy exits, even after a crash."""
+    data_dir.mkdir(parents=True, exist_ok=True)
+    handle = open(data_dir / "running.lock", "a+b")
+    deadline = time.monotonic() + wait
+    while True:
+        try:
+            if sys.platform == "win32":
+                import msvcrt
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return handle
+        except OSError:
+            if show_running_copy() or time.monotonic() > deadline:
+                handle.close()
+                return None
+            time.sleep(0.2)
+
+
 def utf8_console():
     """Chinese text on stdout or stderr must never crash the app. A frozen app ignores PYTHONUTF8 and an English
     Windows console is cp1252; a windowed EXE has no streams, and pywebview would fill them with a cp1252 devnull."""
@@ -74,6 +114,11 @@ def main(argv=None):
         assert RenderService().render(Image.new("RGB", (64, 64)), [], StyleSettings()).size == (64, 64)
         print("简幕资源与 Python 渲染检查通过", flush=True)
         return 0
+    # One copy per data folder, decided before anything reads the project; browser previews are for development.
+    instance = None if args.browser else one_copy(args.data_dir)
+    if not args.browser and instance is None:
+        # 3: a copy holds the lock but has no window to show; build_windows.ps1 checks a second launch gives 0.
+        return 0 if show_running_copy() else 3
     controller = WebController(args.data_dir)
     if args.images:
         controller.import_paths(args.images)

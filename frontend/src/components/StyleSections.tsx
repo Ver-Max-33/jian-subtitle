@@ -141,8 +141,15 @@ function FontSizeField({ target, marker }: { target: Target; marker: ReactNode }
     onPreview={v => target.preview('font_size', v)} onCommit={v => target.apply({ font_size: v })} />;
   return <NumberField label="字号" marker={marker} prefix="字号" value={percentOfReference(size ?? 0, reference)} mixed={size === undefined} digits={1} step={.1}
     min={Math.ceil(8 / reference * 1000) / 10} max={Math.floor(512 / reference * 1000) / 10} unit="%"
-    hint={size === undefined ? undefined : `≈ ${Math.round(pxOnImage(size, reference, edge))} px`}
     onPreview={v => target.preview('font_size', v === undefined ? undefined : storedFromPercent(v, reference))} onCommit={v => target.apply({ font_size: storedFromPercent(v, reference) })} />;
+}
+
+/** The pixels 字号 means on this picture, under the field: inside it the number had no room (2026-11-13). */
+function FontSizeHint({ target }: { target: Target }) {
+  const { reference, edge } = useSizing(target);
+  const size = target.get('font_size');
+  if (!reference || size === undefined) return null;
+  return <small className="section-hint numeric">字号约 {Math.round(pxOnImage(size, reference, edge))} px{target.batch ? '' : '（这张图）'}</small>;
 }
 
 /** Outline and spacing in this picture's pixels, stored at the reference edge (spec 4.2). */
@@ -152,7 +159,7 @@ function PixelField({ target, field, label, prefix, min, max, marker, className 
   const fine = reference !== null && edge !== null;
   const shown = (value: number) => pxOnImage(value, reference, edge);
   return <NumberField label={label} prefix={prefix} marker={marker} className={className} unit="px" value={shown(stored ?? 0)} mixed={stored === undefined}
-    digits={fine ? 1 : 0} step={fine ? .1 : 1} min={shown(min)} max={shown(max)}
+    digits={fine ? 1 : 0} step={fine ? .1 : 1} nudge={1} min={shown(min)} max={shown(max)}
     onPreview={v => target.preview(field, v === undefined ? undefined : storedFromImagePx(v, reference, edge))}
     onCommit={v => target.apply({ [field]: storedFromImagePx(v, reference, edge) })} />;
 }
@@ -232,6 +239,7 @@ export function TextSection({ target, onSavePreset, collapsed, onToggle }: { tar
       <WeightSelect fontId={fontMixed ? undefined : fontId} mixed={fontMixed} onChange={id => target.apply({ font_id: id } as Partial<Style>)} />
       <FontSizeField target={target} marker={<OverrideDot target={target} row="font_size" />} />
     </div>
+    <FontSizeHint target={target} />
     <Exceptions target={target} rows={['font', 'font_size', 'line_spacing', 'letter_spacing', 'skew']} />
   </Section>;
 }

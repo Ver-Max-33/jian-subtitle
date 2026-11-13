@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import unicodedata
+
 from .models import (
     CaptionRenderRequest,
     CaptionStatus,
@@ -9,6 +11,7 @@ from .models import (
     NamingMode,
     Project,
     StyleSettings,
+    stacked_position,
 )
 
 
@@ -44,7 +47,7 @@ class ExportPlanner:
             )
             if output_name != requested_name:
                 warnings.append(f"{requested_name} 已存在，将输出为 {output_name}")
-            reserved_names.add(output_name.casefold())
+            reserved_names.add(self._name_key(output_name))
             items.append(
                 ExportJobItem(
                     source_path=asset.source_path,
@@ -67,10 +70,11 @@ class ExportPlanner:
     def caption_requests(asset, default_style, show_speaker=True):
         return [CaptionRenderRequest(
             f"{subtitle.speaker_id}：{subtitle.text}" if subtitle.speaker_id and show_speaker else subtitle.text,
-            subtitle.manual_position_ratio or subtitle.auto_position_ratio or (0.5, max(0.12, 0.86-index*.12)),
+            subtitle.manual_position_ratio or subtitle.auto_position_ratio or stacked_position(index, len(asset.subtitles)),
             subtitle.rotation,
             StyleSettings.from_mapping({**default_style.to_mapping(), **subtitle.style_overrides}),
-        ) for index, subtitle in enumerate(asset.subtitles)]
+        # An empty caption draws nothing but its background box; leave it out, keep the others' own slots.
+        ) for index, subtitle in enumerate(asset.subtitles) if subtitle.text.strip()]
 
     @staticmethod
     def _output_name(filename: str, index: int, options: ExportOptions) -> str:
@@ -85,6 +89,11 @@ class ExportPlanner:
         return f"{options.prefix}{stem}{options.suffix}{suffix}"
 
     @staticmethod
+    def _name_key(name: str) -> str:
+        """How file systems compare names: macOS treats NFC and NFD as one name, Windows and macOS ignore case."""
+        return unicodedata.normalize("NFC", name).casefold()
+
+    @staticmethod
     def _unique_name(
         requested_name: str,
         options: ExportOptions,
@@ -96,7 +105,7 @@ class ExportPlanner:
         candidate = requested.name
         number = 2
         while (
-            candidate.casefold() in reserved_names
+            ExportPlanner._name_key(candidate) in reserved_names
             or (options.output_dir / candidate).exists()
         ):
             candidate = f"{requested.stem}_{number}{requested.suffix}"
