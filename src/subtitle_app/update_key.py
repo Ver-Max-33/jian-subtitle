@@ -2,4 +2,4 @@
 
 `scripts/release.py keygen` writes it. Empty means this build cannot update itself.
 """
-PUBLIC_KEY = "N9KCEOaHU/Vsjw+WOizxEiVu+qY8qo2Zh4inl76cSYo="
+PUBLIC_KEY = "rvXBgf3XHvCAjnP3FJN2XYjKSI0N1LXCGVufF3iuOeY="

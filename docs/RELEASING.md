@@ -27,8 +27,10 @@ git push origin main v0.3.0
    .venv/bin/python scripts/release.py keygen
    ```
 
-   私钥存在 `~/.config/jian-subtitle/update-signing-key.pem`，权限 600，口令加密。公钥写进 `src/subtitle_app/update_key.py`，提交它。没有公钥时 CI 会拒绝发布。
+   私钥存在 `~/.config/jian-subtitle/update-signing-key-2.pem`，权限 600，口令加密。公钥写进 `src/subtitle_app/update_key.py`，提交它。没有公钥时 CI 会拒绝发布。
 2. **备份私钥文件和口令**（放进密码管理器）。丢了它，已安装的版本就再也收不到自动更新，只能让用户手动重装。
+
+   2026-11-13 第一把钥匙（`update-signing-key.pem`）的口令遗失，从 0.3.1 起换成第二把。已安装 0.2.2 的用户只认第一把，需要从 GitHub 手动下载安装一次 0.3.1，之后恢复自动更新。第一把的文件留在原处：口令找回时还能给 0.2.2 补发一个过渡更新。
 3. 需要 OpenSSL 3（`brew install openssl@3`；macOS 自带的 LibreSSL 不支持）和已登录的 `gh`。
 4. 建议在仓库 Settings → General 里开启 **Release immutability**：发布后安装包和标签都不能再被替换。
 

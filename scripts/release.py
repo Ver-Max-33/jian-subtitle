@@ -24,7 +24,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from subtitle_app.updater import NOTES_LIMIT, REPOSITORY, UpdateError, envelope, installer_name, make_payload, parse_version, read_manifest  # noqa: E402
 
-KEY_PATH = Path.home() / ".config/jian-subtitle/update-signing-key.pem"
+# The second key, from 0.3.1 on. The first one's passphrase was lost on 2026-11-13; its file stays beside this one
+# (update-signing-key.pem) in case the passphrase comes back: 0.2.2 installs accept only that key.
+KEY_PATH = Path.home() / ".config/jian-subtitle/update-signing-key-2.pem"
 WORKFLOW = ".github/workflows/release.yml"
 ED25519_SPKI = bytes.fromhex("302a300506032b6570032100")  # DER prefix of a raw 32-byte Ed25519 public key
 
